@@ -205,7 +205,7 @@
 <script>
   // ── Firebase Config ──────────────────────────────────────────
   const FIREBASE_URL = "https://rooftop-horticulture-default-rtdb.asia-southeast1.firebasedatabase.app/sensor/latest.json";
-
+  const FIREBASE_HISTORY_URL = "https://rooftop-horticulture-default-rtdb.asia-southeast1.firebasedatabase.app/sensor/history.json?orderBy=%22timestamp%22&limitToLast=20";
   // ── Clock ────────────────────────────────────────────────────
   function updateClock() {
     document.getElementById('clock').textContent = new Date().toLocaleTimeString();
@@ -315,10 +315,37 @@
       console.error('Fetch error:', err);
     }
   }
+ async function fetchHistory() {
+  try {
+    const res  = await fetch(FIREBASE_HISTORY_URL);
+    const data = await res.json();
 
+    // Firebase returns an object — convert to array
+    const entries = Object.values(data);
+
+    // Sort by timestamp just in case
+    entries.sort((a, b) => a.timestamp.localeCompare(b.timestamp));
+
+    // Extract data for chart
+    const newLabels  = entries.map(e => e.timestamp ? e.timestamp.split(' ')[1] : '');
+    const newTemps   = entries.map(e => e.temperature);
+    const newMoist   = entries.map(e => e.moisture);
+
+    // Update chart
+    chart.data.labels        = newLabels;
+    chart.data.datasets[0].data = newTemps;
+    chart.data.datasets[1].data = newMoist;
+    chart.update();
+
+  } catch (err) {
+    console.error('History fetch error:', err);
+  }
+ }
   // Fetch immediately then every 5 seconds
   fetchData();
+  fetchHistory();
   setInterval(fetchData, 5000);
+  setInterval(fetchHistory, 30000);  // update history chart every 30 seconds
 </script>
 
 </body>
