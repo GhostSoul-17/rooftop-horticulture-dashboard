@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rooftop Horticulture DSS</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f4f8;
+      color: #1a202c;
+    }
+
+    header {
+      background: #1a6b3c;
+      color: white;
+      padding: 18px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header h1 { font-size: 20px; font-weight: 600; }
+    header span { font-size: 13px; opacity: 0.8; }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
+
+    /* Status Bar */
+    .status-bar {
+      background: white;
+      border-radius: 12px;
+      padding: 14px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    .status-bar .left { display: flex; align-items: center; gap: 10px; }
+
+    .irrigation-badge {
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .irrigation-badge.on  { background: #d1fae5; color: #065f46; }
+    .irrigation-badge.off { background: #fee2e2; color: #991b1b; }
+
+    .last-updated { font-size: 13px; color: #6b7280; }
+
+    /* Sensor Cards */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+
+    .card .icon { font-size: 28px; margin-bottom: 8px; }
+    .card .label { font-size: 12px; color: #6b7280; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .card .value { font-size: 28px; font-weight: 700; color: #1a202c; }
+    .card .unit  { font-size: 13px; color: #9ca3af; }
+
+    .card.temp   { border-top: 3px solid #f97316; }
+    .card.moist  { border-top: 3px solid #3b82f6; }
+    .card.light  { border-top: 3px solid #eab308; }
+    .card.ec     { border-top: 3px solid #8b5cf6; }
+    .card.sal    { border-top: 3px solid #06b6d4; }
+
+    /* NPK Card */
+    .npk-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      margin-bottom: 24px;
+      border-top: 3px solid #1a6b3c;
+    }
+
+    .npk-card h3 { font-size: 14px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px; }
+
+    .npk-bars { display: flex; gap: 24px; flex-wrap: wrap; }
+
+    .npk-item { flex: 1; min-width: 120px; }
+    .npk-item .npk-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
+    .npk-item .npk-label span:first-child { font-weight: 600; }
+    .npk-bar-bg { background: #f3f4f6; border-radius: 6px; height: 10px; overflow: hidden; }
+    .npk-bar-fill { height: 100%; border-radius: 6px; transition: width 0.5s ease; }
+    .npk-n { background: #22c55e; }
+    .npk-p { background: #f97316; }
+    .npk-k { background: #a855f7; }
+
+    /* Chart */
+    .chart-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      margin-bottom: 24px;
+    }
+
+    .chart-card h3 { font-size: 14px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px; }
+
+    canvas { max-height: 260px; }
+
+    /* Footer */
+    footer { text-align: center; font-size: 12px; color: #9ca3af; padding: 16px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🌿 Rooftop Horticulture — Decision Support System</h1>
+  <span id="clock"></span>
+</header>
+
+<div class="container">
+
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <div class="left">
+      <span style="font-size:14px; font-weight:600;">Irrigation Status:</span>
+      <span class="irrigation-badge off" id="irrigation-badge">Loading...</span>
+    </div>
+    <span class="last-updated" id="last-updated">Last updated: —</span>
+  </div>
+
+  <!-- Sensor Cards -->
+  <div class="cards-grid">
+    <div class="card temp">
+      <div class="icon">🌡️</div>
+      <div class="label">Temperature</div>
+      <div class="value" id="val-temp">—</div>
+      <div class="unit">°C</div>
+    </div>
+    <div class="card moist">
+      <div class="icon">💧</div>
+      <div class="label">Moisture</div>
+      <div class="value" id="val-moisture">—</div>
+      <div class="unit">%</div>
+    </div>
+    <div class="card light">
+      <div class="icon">☀️</div>
+      <div class="label">Light</div>
+      <div class="value" id="val-light">—</div>
+      <div class="unit">lux</div>
+    </div>
+    <div class="card ec">
+      <div class="icon">⚡</div>
+      <div class="label">EC</div>
+      <div class="value" id="val-ec">—</div>
+      <div class="unit">µS/cm</div>
+    </div>
+    <div class="card sal">
+      <div class="icon">🧂</div>
+      <div class="label">Salinity</div>
+      <div class="value" id="val-salinity">—</div>
+      <div class="unit">mg/L</div>
+    </div>
+  </div>
+
+  <!-- NPK Card -->
+  <div class="npk-card">
+    <h3>Soil Nutrients (N / P / K)</h3>
+    <div class="npk-bars">
+      <div class="npk-item">
+        <div class="npk-label"><span>Nitrogen (N)</span><span id="val-n">—</span></div>
+        <div class="npk-bar-bg"><div class="npk-bar-fill npk-n" id="bar-n" style="width:0%"></div></div>
+      </div>
+      <div class="npk-item">
+        <div class="npk-label"><span>Phosphorus (P)</span><span id="val-p">—</span></div>
+        <div class="npk-bar-bg"><div class="npk-bar-fill npk-p" id="bar-p" style="width:0%"></div></div>
+      </div>
+      <div class="npk-item">
+        <div class="npk-label"><span>Potassium (K)</span><span id="val-k">—</span></div>
+        <div class="npk-bar-bg"><div class="npk-bar-fill npk-k" id="bar-k" style="width:0%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart -->
+  <div class="chart-card">
+    <h3>Temperature & Moisture — Live History</h3>
+    <canvas id="liveChart"></canvas>
+  </div>
+
+</div>
+
+<footer>Rooftop Horticulture DSS &mdash; Data refreshes every 5 seconds</footer>
+
+<script>
+  // ── Firebase Config ──────────────────────────────────────────
+  const FIREBASE_URL = "https://rooftop-horticulture-default-rtdb.asia-southeast1.firebasedatabase.app/sensor/latest.json";
+
+  // ── Clock ────────────────────────────────────────────────────
+  function updateClock() {
+    document.getElementById('clock').textContent = new Date().toLocaleTimeString();
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  // ── Chart Setup ──────────────────────────────────────────────
+  const maxPoints = 20;
+  const labels = [];
+  const tempData = [];
+  const moistData = [];
+
+  const ctx = document.getElementById('liveChart').getContext('2d');
+  const chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Temperature (°C)',
+          data: tempData,
+          borderColor: '#f97316',
+          backgroundColor: 'rgba(249,115,22,0.08)',
+          tension: 0.4,
+          fill: true,
+          pointRadius: 3,
+        },
+        {
+          label: 'Moisture (%)',
+          data: moistData,
+          borderColor: '#3b82f6',
+          backgroundColor: 'rgba(59,130,246,0.08)',
+          tension: 0.4,
+          fill: true,
+          pointRadius: 3,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      animation: { duration: 300 },
+      scales: {
+        x: { ticks: { font: { size: 11 } } },
+        y: { beginAtZero: false, ticks: { font: { size: 11 } } }
+      },
+      plugins: {
+        legend: { position: 'top' }
+      }
+    }
+  });
+
+  // ── Fetch & Update ───────────────────────────────────────────
+  async function fetchData() {
+    try {
+      const res  = await fetch(FIREBASE_URL);
+      const data = await res.json();
+
+      // Cards
+      document.getElementById('val-temp').textContent     = data.temperature?.toFixed(1) ?? '—';
+      document.getElementById('val-moisture').textContent = data.moisture?.toFixed(1)    ?? '—';
+      document.getElementById('val-light').textContent    = data.light?.toFixed(0)       ?? '—';
+      document.getElementById('val-ec').textContent       = data.ec                      ?? '—';
+      document.getElementById('val-salinity').textContent = data.salinity                ?? '—';
+
+      // NPK
+      const nVal = data.nitrogen   ?? 0;
+      const pVal = data.phosphorus ?? 0;
+      const kVal = data.potassium  ?? 0;
+      const maxNPK = 200;
+
+      document.getElementById('val-n').textContent = nVal + ' mg/kg';
+      document.getElementById('val-p').textContent = pVal + ' mg/kg';
+      document.getElementById('val-k').textContent = kVal + ' mg/kg';
+      document.getElementById('bar-n').style.width = Math.min(nVal / maxNPK * 100, 100) + '%';
+      document.getElementById('bar-p').style.width = Math.min(pVal / maxNPK * 100, 100) + '%';
+      document.getElementById('bar-k').style.width = Math.min(kVal / maxNPK * 100, 100) + '%';
+
+      // Irrigation badge
+      const badge = document.getElementById('irrigation-badge');
+      if (data.irrigation) {
+        badge.textContent = '💧 ON — Irrigating';
+        badge.className = 'irrigation-badge on';
+      } else {
+        badge.textContent = '⏸ OFF';
+        badge.className = 'irrigation-badge off';
+      }
+
+      // Last updated
+      document.getElementById('last-updated').textContent = 'Last updated: ' + (data.timestamp ?? new Date().toLocaleTimeString());
+
+      // Chart
+      const timeLabel = data.timestamp ? data.timestamp.split(' ')[1] : new Date().toLocaleTimeString();
+      if (labels.length === 0 || labels[labels.length - 1] !== timeLabel) {
+        labels.push(timeLabel);
+        tempData.push(data.temperature);
+        moistData.push(data.moisture);
+        if (labels.length > maxPoints) {
+          labels.shift();
+          tempData.shift();
+          moistData.shift();
+        }
+        chart.update();
+      }
+
+    } catch (err) {
+      console.error('Fetch error:', err);
+    }
+  }
+
+  // Fetch immediately then every 5 seconds
+  fetchData();
+  setInterval(fetchData, 5000);
+</script>
+
+</body>
+</html>
