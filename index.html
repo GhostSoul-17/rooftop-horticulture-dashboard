@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Rooftop Horticulture DSS</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
@@ -25,7 +25,6 @@
       align-items: center;
       justify-content: space-between;
     }
-
     header h1 { font-size: 20px; font-weight: 600; }
     header span { font-size: 13px; opacity: 0.8; }
 
@@ -42,19 +41,15 @@
       justify-content: space-between;
       box-shadow: 0 1px 4px rgba(0,0,0,0.08);
     }
-
     .status-bar .left { display: flex; align-items: center; gap: 10px; }
-
     .irrigation-badge {
       padding: 6px 16px;
       border-radius: 20px;
       font-size: 14px;
       font-weight: 600;
     }
-
     .irrigation-badge.on  { background: #d1fae5; color: #065f46; }
     .irrigation-badge.off { background: #fee2e2; color: #991b1b; }
-
     .last-updated { font-size: 13px; color: #6b7280; }
 
     /* Sensor Cards */
@@ -64,7 +59,6 @@
       gap: 16px;
       margin-bottom: 24px;
     }
-
     .card {
       background: white;
       border-radius: 12px;
@@ -72,17 +66,15 @@
       box-shadow: 0 1px 4px rgba(0,0,0,0.08);
       text-align: center;
     }
-
-    .card .icon { font-size: 28px; margin-bottom: 8px; }
+    .card .icon  { font-size: 28px; margin-bottom: 8px; }
     .card .label { font-size: 12px; color: #6b7280; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
     .card .value { font-size: 28px; font-weight: 700; color: #1a202c; }
     .card .unit  { font-size: 13px; color: #9ca3af; }
-
-    .card.temp   { border-top: 3px solid #f97316; }
-    .card.moist  { border-top: 3px solid #3b82f6; }
-    .card.light  { border-top: 3px solid #eab308; }
-    .card.ec     { border-top: 3px solid #8b5cf6; }
-    .card.sal    { border-top: 3px solid #06b6d4; }
+    .card.temp  { border-top: 3px solid #f97316; }
+    .card.moist { border-top: 3px solid #3b82f6; }
+    .card.light { border-top: 3px solid #eab308; }
+    .card.ec    { border-top: 3px solid #8b5cf6; }
+    .card.sal   { border-top: 3px solid #06b6d4; }
 
     /* NPK Card */
     .npk-card {
@@ -93,11 +85,8 @@
       margin-bottom: 24px;
       border-top: 3px solid #1a6b3c;
     }
-
     .npk-card h3 { font-size: 14px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px; }
-
     .npk-bars { display: flex; gap: 24px; flex-wrap: wrap; }
-
     .npk-item { flex: 1; min-width: 120px; }
     .npk-item .npk-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
     .npk-item .npk-label span:first-child { font-weight: 600; }
@@ -107,6 +96,120 @@
     .npk-p { background: #f97316; }
     .npk-k { background: #a855f7; }
 
+    /* ── DSS Panel ────────────────────────────────────────────── */
+    .dss-panel {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      margin-bottom: 24px;
+      border-top: 3px solid #1a6b3c;
+    }
+    .dss-panel h2 {
+      font-size: 15px;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 20px;
+    }
+
+    /* Overall health score */
+    .health-score-row {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .score-circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-weight: 700;
+    }
+    .score-circle .score-num  { font-size: 26px; line-height: 1; }
+    .score-circle .score-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; }
+    .score-good    { background: #d1fae5; color: #065f46; }
+    .score-warning { background: #fef3c7; color: #92400e; }
+    .score-danger  { background: #fee2e2; color: #991b1b; }
+    .health-text h3 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+    .health-text p  { font-size: 14px; color: #6b7280; }
+
+    /* Alert items */
+    .alerts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .alert-item {
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .alert-item.good    { background: #f0fdf4; border: 1px solid #bbf7d0; }
+    .alert-item.warning { background: #fffbeb; border: 1px solid #fde68a; }
+    .alert-item.danger  { background: #fef2f2; border: 1px solid #fecaca; }
+    .alert-item.info    { background: #eff6ff; border: 1px solid #bfdbfe; }
+    .alert-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+    .alert-content .alert-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+    .alert-item.good    .alert-title { color: #065f46; }
+    .alert-item.warning .alert-title { color: #92400e; }
+    .alert-item.danger  .alert-title { color: #991b1b; }
+    .alert-item.info    .alert-title { color: #1e40af; }
+    .alert-content .alert-desc {
+      font-size: 13px;
+      color: #6b7280;
+      line-height: 1.5;
+    }
+
+    /* Action steps */
+    .actions-section h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 12px;
+      padding-top: 16px;
+      border-top: 1px solid #f3f4f6;
+    }
+    .action-list { display: flex; flex-direction: column; gap: 8px; }
+    .action-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 14px;
+      background: #f9fafb;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    .action-step .step-num {
+      background: #1a6b3c;
+      color: white;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .action-step .step-text { color: #374151; line-height: 1.5; }
+    .action-step .step-text strong { color: #1a202c; }
+
     /* Chart */
     .chart-card {
       background: white;
@@ -115,12 +218,15 @@
       box-shadow: 0 1px 4px rgba(0,0,0,0.08);
       margin-bottom: 24px;
     }
-
-    .chart-card h3 { font-size: 14px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px; }
-
+    .chart-card h3 {
+      font-size: 14px;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 16px;
+    }
     canvas { max-height: 260px; }
 
-    /* Footer */
     footer { text-align: center; font-size: 12px; color: #9ca3af; padding: 16px; }
   </style>
 </head>
@@ -195,6 +301,26 @@
     </div>
   </div>
 
+  <!-- DSS Recommendation Panel -->
+  <div class="dss-panel">
+    <h2>🧠 Decision Support — Crop Recommendations</h2>
+    <div class="health-score-row">
+      <div class="score-circle score-good" id="health-circle">
+        <span class="score-num" id="health-score">—</span>
+        <span class="score-label">Health</span>
+      </div>
+      <div class="health-text">
+        <h3 id="health-title">Analysing...</h3>
+        <p id="health-desc">Waiting for sensor data to generate recommendations.</p>
+      </div>
+    </div>
+    <div class="alerts-grid" id="alerts-grid"></div>
+    <div class="actions-section">
+      <h3>📋 Recommended Action Steps</h3>
+      <div class="action-list" id="action-list"></div>
+    </div>
+  </div>
+
   <!-- Chart -->
   <div class="chart-card">
     <h3>Temperature & Moisture — Live History</h3>
@@ -208,7 +334,7 @@
 <script>
   // ── Firebase Config ──────────────────────────────────────────
   const FIREBASE_URL = "https://rooftop-horticulture-default-rtdb.asia-southeast1.firebasedatabase.app/sensor/latest.json";
-  const FIREBASE_HISTORY_URL = "https://rooftop-horticulture-default-rtdb.asia-southeast1.firebasedatabase.app/sensor/history.json?orderBy=%22timestamp%22&limitToLast=20&nocache=" + Date.now();
+
   // ── Clock ────────────────────────────────────────────────────
   function updateClock() {
     document.getElementById('clock').textContent = new Date().toLocaleTimeString();
@@ -218,34 +344,15 @@
 
   // ── Chart Setup ──────────────────────────────────────────────
   const maxPoints = 20;
-  const labels = [];
-  const tempData = [];
-  const moistData = [];
-
+  const labels = [], tempData = [], moistData = [];
   const ctx = document.getElementById('liveChart').getContext('2d');
   const chart = new Chart(ctx, {
     type: 'line',
     data: {
-      labels: labels,
+      labels,
       datasets: [
-        {
-          label: 'Temperature (°C)',
-          data: tempData,
-          borderColor: '#f97316',
-          backgroundColor: 'rgba(249,115,22,0.08)',
-          tension: 0.4,
-          fill: true,
-          pointRadius: 3,
-        },
-        {
-          label: 'Moisture (%)',
-          data: moistData,
-          borderColor: '#3b82f6',
-          backgroundColor: 'rgba(59,130,246,0.08)',
-          tension: 0.4,
-          fill: true,
-          pointRadius: 3,
-        }
+        { label: 'Temperature (°C)', data: tempData, borderColor: '#f97316', backgroundColor: 'rgba(249,115,22,0.08)', tension: 0.4, fill: true, pointRadius: 3 },
+        { label: 'Moisture (%)',     data: moistData, borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.08)', tension: 0.4, fill: true, pointRadius: 3 }
       ]
     },
     options: {
@@ -255,17 +362,176 @@
         x: { ticks: { font: { size: 11 } } },
         y: { beginAtZero: false, ticks: { font: { size: 11 } } }
       },
-      plugins: {
-        legend: { position: 'top' }
-      }
+      plugins: { legend: { position: 'top' } }
     }
   });
+
+  // ── DSS Engine ───────────────────────────────────────────────
+  // Thresholds based on general-purpose rooftop horticulture
+  const THRESHOLDS = {
+    moisture:    { low: 20,   high: 80,   unit: '%' },
+    temperature: { low: 15,   high: 35,   unit: '°C' },
+    light:       { low: 200,  high: 10000, unit: 'lux' },
+    ec:          { low: 200,  high: 2000,  unit: 'µS/cm' },
+    salinity:    { low: 0,    high: 500,   unit: 'mg/L' },
+    nitrogen:    { low: 100,  high: 300,   unit: 'mg/kg' },
+    phosphorus:  { low: 20,   high: 100,   unit: 'mg/kg' },
+    potassium:   { low: 100,  high: 300,   unit: 'mg/kg' },
+  };
+
+  function runDSS(data) {
+    const alerts  = [];
+    const actions = [];
+    let score = 100;
+
+    const t  = data.temperature ?? 0;
+    const m  = data.moisture    ?? 0;
+    const l  = data.light       ?? 0;
+    const ec = data.ec          ?? 0;
+    const s  = data.salinity    ?? 0;
+    const n  = data.nitrogen    ?? 0;
+    const p  = data.phosphorus  ?? 0;
+    const k  = data.potassium   ?? 0;
+    const irr = data.irrigation;
+
+    // ── Moisture ──────────────────────────────────────────────
+    if (m < THRESHOLDS.moisture.low) {
+      const severity = m < 10 ? 'danger' : 'warning';
+      score -= severity === 'danger' ? 25 : 15;
+      alerts.push({ type: severity, icon: '💧', title: 'Low Soil Moisture', desc: `Moisture is ${m.toFixed(1)}% — below the ${THRESHOLDS.moisture.low}% minimum. ${irr ? 'Irrigation is currently ON.' : 'Irrigation should activate soon.'}` });
+      actions.push(irr ? 'Monitor irrigation — system is watering to restore moisture levels.' : 'Check solenoid valve and relay — irrigation should have triggered automatically.');
+    } else if (m > THRESHOLDS.moisture.high) {
+      score -= 15;
+      alerts.push({ type: 'warning', icon: '🌊', title: 'High Soil Moisture', desc: `Moisture is ${m.toFixed(1)}% — above ${THRESHOLDS.moisture.high}%. Risk of root rot and fungal disease.` });
+      actions.push('Pause irrigation immediately and improve drainage. Check for waterlogging.');
+    } else {
+      alerts.push({ type: 'good', icon: '✅', title: 'Moisture Optimal', desc: `Soil moisture at ${m.toFixed(1)}% — within the ideal range of ${THRESHOLDS.moisture.low}–${THRESHOLDS.moisture.high}%.` });
+    }
+
+    // ── Temperature ───────────────────────────────────────────
+    if (t > THRESHOLDS.temperature.high) {
+      score -= 20;
+      alerts.push({ type: 'danger', icon: '🔥', title: 'High Temperature', desc: `Temperature is ${t.toFixed(1)}°C — above ${THRESHOLDS.temperature.high}°C. Heat stress can damage crops and reduce yield.` });
+      actions.push('Install shade netting or increase ventilation to reduce heat stress on plants.');
+      actions.push('Increase irrigation frequency slightly to compensate for higher evapotranspiration.');
+    } else if (t < THRESHOLDS.temperature.low) {
+      score -= 15;
+      alerts.push({ type: 'warning', icon: '🧊', title: 'Low Temperature', desc: `Temperature is ${t.toFixed(1)}°C — below ${THRESHOLDS.temperature.low}°C. Growth will slow significantly.` });
+      actions.push('Consider covering plants with a frost cloth or relocating sensitive crops indoors.');
+    } else {
+      alerts.push({ type: 'good', icon: '✅', title: 'Temperature Optimal', desc: `Temperature at ${t.toFixed(1)}°C — ideal growing conditions for most rooftop crops.` });
+    }
+
+    // ── Light ─────────────────────────────────────────────────
+    if (l < THRESHOLDS.light.low) {
+      score -= 15;
+      alerts.push({ type: 'warning', icon: '🌑', title: 'Insufficient Light', desc: `Light level is ${l.toFixed(0)} lux — below the ${THRESHOLDS.light.low} lux minimum for healthy photosynthesis.` });
+      actions.push('Relocate containers to a sunnier area or supplement with grow lights for 12–16 hours/day.');
+    } else {
+      alerts.push({ type: 'good', icon: '☀️', title: 'Light Adequate', desc: `Light intensity at ${l.toFixed(0)} lux — sufficient for active photosynthesis and healthy growth.` });
+    }
+
+    // ── EC ────────────────────────────────────────────────────
+    if (ec > THRESHOLDS.ec.high) {
+      score -= 15;
+      alerts.push({ type: 'danger', icon: '⚡', title: 'High EC — Salt Stress Risk', desc: `EC is ${ec} µS/cm — above ${THRESHOLDS.ec.high} µS/cm. Nutrient toxicity and salt stress likely.` });
+      actions.push('Flush soil with clean water to reduce salt accumulation. Reduce fertilizer dosage.');
+    } else if (ec < THRESHOLDS.ec.low && ec > 0) {
+      score -= 10;
+      alerts.push({ type: 'info', icon: '📉', title: 'Low EC — Nutrient Deficiency Risk', desc: `EC is ${ec} µS/cm — below ${THRESHOLDS.ec.low} µS/cm. Soil may be nutrient-depleted.` });
+      actions.push('Apply a balanced liquid fertilizer to restore nutrient levels in the soil.');
+    }
+
+    // ── Salinity ──────────────────────────────────────────────
+    if (s > THRESHOLDS.salinity.high) {
+      score -= 10;
+      alerts.push({ type: 'warning', icon: '🧂', title: 'High Salinity', desc: `Salinity at ${s} mg/L — above safe limit of ${THRESHOLDS.salinity.high} mg/L. Can inhibit water uptake by roots.` });
+      actions.push('Leach soil with excess water to flush out soluble salts. Avoid saline water sources.');
+    }
+
+    // ── NPK ───────────────────────────────────────────────────
+    let npkIssues = [];
+    if (n < THRESHOLDS.nitrogen.low)   { npkIssues.push(`Nitrogen (${n} mg/kg) is low — apply urea or ammonium sulfate fertilizer`); score -= 8; }
+    if (n > THRESHOLDS.nitrogen.high)  { npkIssues.push(`Nitrogen (${n} mg/kg) is excessive — reduce nitrogen fertilizer immediately`); score -= 5; }
+    if (p < THRESHOLDS.phosphorus.low) { npkIssues.push(`Phosphorus (${p} mg/kg) is low — apply superphosphate or bone meal`); score -= 8; }
+    if (k < THRESHOLDS.potassium.low)  { npkIssues.push(`Potassium (${k} mg/kg) is low — apply potassium sulphate or muriate of potash`); score -= 8; }
+
+    if (npkIssues.length > 0) {
+      alerts.push({ type: 'warning', icon: '🌱', title: 'Nutrient Imbalance Detected', desc: npkIssues.join('. ') + '.' });
+      actions.push('Conduct a full soil nutrient correction using a targeted NPK fertilizer mix based on deficiencies above.');
+    } else if (n > 0 || p > 0 || k > 0) {
+      alerts.push({ type: 'good', icon: '✅', title: 'Nutrient Levels Adequate', desc: `N: ${n}, P: ${p}, K: ${k} mg/kg — all within acceptable ranges for general-purpose crops.` });
+    }
+
+    // ── Irrigation Status ─────────────────────────────────────
+    alerts.push({
+      type: irr ? 'info' : 'good',
+      icon: irr ? '🚿' : '⏸',
+      title: irr ? 'Irrigation Active' : 'Irrigation Standby',
+      desc: irr
+        ? 'Solenoid valve is open — water is flowing to the rooftop garden.'
+        : 'System is in standby — moisture levels do not require irrigation currently.'
+    });
+
+    // ── Score & Title ─────────────────────────────────────────
+    score = Math.max(0, Math.min(100, score));
+    let title, desc, scoreClass;
+    if (score >= 75) {
+      title = 'Crop Conditions Good';
+      desc  = 'Your rooftop garden is in good health. Continue current practices and monitor regularly.';
+      scoreClass = 'score-good';
+    } else if (score >= 50) {
+      title = 'Attention Required';
+      desc  = 'Some parameters need correction. Follow the action steps below to restore optimal conditions.';
+      scoreClass = 'score-warning';
+    } else {
+      title = 'Critical Intervention Needed';
+      desc  = 'Multiple parameters are outside safe ranges. Immediate action is required to prevent crop loss.';
+      scoreClass = 'score-danger';
+    }
+
+    return { score, title, desc, scoreClass, alerts, actions };
+  }
+
+  function renderDSS(result) {
+    // Health score
+    const circle = document.getElementById('health-circle');
+    circle.className = 'score-circle ' + result.scoreClass;
+    document.getElementById('health-score').textContent = result.score;
+    document.getElementById('health-title').textContent = result.title;
+    document.getElementById('health-desc').textContent  = result.desc;
+
+    // Alerts
+    const grid = document.getElementById('alerts-grid');
+    grid.innerHTML = result.alerts.map(a => `
+      <div class="alert-item ${a.type}">
+        <span class="alert-icon">${a.icon}</span>
+        <div class="alert-content">
+          <div class="alert-title">${a.title}</div>
+          <div class="alert-desc">${a.desc}</div>
+        </div>
+      </div>
+    `).join('');
+
+    // Actions
+    const list = document.getElementById('action-list');
+    if (result.actions.length === 0) {
+      list.innerHTML = '<div class="action-step"><span class="step-num">✓</span><span class="step-text">No immediate actions required — maintain current practices.</span></div>';
+    } else {
+      list.innerHTML = result.actions.map((a, i) => `
+        <div class="action-step">
+          <span class="step-num">${i + 1}</span>
+          <span class="step-text">${a}</span>
+        </div>
+      `).join('');
+    }
+  }
 
   // ── Fetch & Update ───────────────────────────────────────────
   async function fetchData() {
     try {
-      const url = "https://rooftop-horticulture-default-rtdb.asia-southeast1.firebasedatabase.app/sensor/history.json?orderBy=%22timestamp%22&limitToLast=20&nocache=" + Date.now();
-      const res = await fetch(url);
+      const url = FIREBASE_URL + '?nocache=' + Date.now();
+      const res  = await fetch(url);
       const data = await res.json();
 
       // Cards
@@ -279,8 +545,7 @@
       const nVal = data.nitrogen   ?? 0;
       const pVal = data.phosphorus ?? 0;
       const kVal = data.potassium  ?? 0;
-      const maxNPK = 200;
-
+      const maxNPK = 300;
       document.getElementById('val-n').textContent = nVal + ' mg/kg';
       document.getElementById('val-p').textContent = pVal + ' mg/kg';
       document.getElementById('val-k').textContent = kVal + ' mg/kg';
@@ -299,7 +564,7 @@
       }
 
       // Last updated
-      document.getElementById('last-updated').textContent = 'Last updated: ' + (data.timestamp ?? new Date().toLocaleTimeString());
+      document.getElementById('last-updated').textContent = 'Last updated: ' + new Date().toLocaleTimeString();
 
       // Chart
       const timeLabel = data.timestamp ? data.timestamp.split(' ')[1] : new Date().toLocaleTimeString();
@@ -307,49 +572,21 @@
         labels.push(timeLabel);
         tempData.push(data.temperature);
         moistData.push(data.moisture);
-        if (labels.length > maxPoints) {
-          labels.shift();
-          tempData.shift();
-          moistData.shift();
-        }
+        if (labels.length > maxPoints) { labels.shift(); tempData.shift(); moistData.shift(); }
         chart.update();
       }
+
+      // DSS
+      const result = runDSS(data);
+      renderDSS(result);
 
     } catch (err) {
       console.error('Fetch error:', err);
     }
   }
- async function fetchHistory() {
-  try {
-    const res  = await fetch(FIREBASE_HISTORY_URL);
-    const data = await res.json();
 
-    // Firebase returns an object — convert to array
-    const entries = Object.values(data);
-
-    // Sort by timestamp just in case
-    entries.sort((a, b) => a.timestamp.localeCompare(b.timestamp));
-
-    // Extract data for chart
-    const newLabels  = entries.map(e => e.timestamp ? e.timestamp.split(' ')[1] : '');
-    const newTemps   = entries.map(e => e.temperature);
-    const newMoist   = entries.map(e => e.moisture);
-
-    // Update chart
-    chart.data.labels        = newLabels;
-    chart.data.datasets[0].data = newTemps;
-    chart.data.datasets[1].data = newMoist;
-    chart.update();
-
-  } catch (err) {
-    console.error('History fetch error:', err);
-  }
- }
-  // Fetch immediately then every 5 seconds
   fetchData();
-  fetchHistory();
   setInterval(fetchData, 5000);
-  setInterval(fetchHistory, 30000);  // update history chart every 30 seconds
 </script>
 
 </body>
