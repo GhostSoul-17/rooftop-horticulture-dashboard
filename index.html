@@ -585,8 +585,30 @@
     }
   }
 
-  fetchData();
-  setInterval(fetchData, 5000);
+  // ── Fetch History ──────────────────────────────────────────
+ async function fetchHistory() {
+  try {
+    const url = "https://rooftop-horticulture-default-rtdb.asia-southeast1.firebasedatabase.app/sensor/history.json?orderBy=%22timestamp%22&limitToLast=20&nocache=" + Date.now();
+    const res  = await fetch(url);
+    const data = await res.json();
+    if (!data) return;
+
+    const entries = Object.values(data).sort((a, b) => a.timestamp.localeCompare(b.timestamp));
+
+    chart.data.labels           = entries.map(e => e.timestamp ? e.timestamp.split(' ')[1] : '');
+    chart.data.datasets[0].data = entries.map(e => e.temperature);
+    chart.data.datasets[1].data = entries.map(e => e.moisture);
+    chart.update();
+
+  } catch (err) {
+    console.error('History fetch error:', err);
+  }
+}
+
+fetchData();
+fetchHistory();
+setInterval(fetchData, 5000);
+setInterval(fetchHistory, 30000);
 </script>
 
 </body>
