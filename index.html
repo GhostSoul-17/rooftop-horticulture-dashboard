@@ -30,7 +30,31 @@
 
     .container { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
 
-    /* Status Bar */
+    /* ── Offline Banner ───────────────────────────────────── */
+    .offline-banner {
+      display: none;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 10px;
+      padding: 12px 20px;
+      margin-bottom: 16px;
+      align-items: center;
+      gap: 12px;
+      color: #991b1b;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .offline-banner.visible { display: flex; }
+    .offline-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: #ef4444;
+      flex-shrink: 0;
+      animation: blink 1.2s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* ── Status Bar ───────────────────────────────────────── */
     .status-bar {
       background: white;
       border-radius: 12px;
@@ -39,9 +63,32 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
       box-shadow: 0 1px 4px rgba(0,0,0,0.08);
     }
-    .status-bar .left { display: flex; align-items: center; gap: 10px; }
+    .status-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+    /* Online/Offline pill */
+    .system-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .system-status.online  { background: #d1fae5; color: #065f46; }
+    .system-status.offline { background: #fee2e2; color: #991b1b; }
+    .status-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .system-status.online  .status-dot { background: #22c55e; }
+    .system-status.offline .status-dot { background: #ef4444; animation: blink 1.2s ease-in-out infinite; }
+
     .irrigation-badge {
       padding: 6px 16px;
       border-radius: 20px;
@@ -50,7 +97,71 @@
     }
     .irrigation-badge.on  { background: #d1fae5; color: #065f46; }
     .irrigation-badge.off { background: #fee2e2; color: #991b1b; }
+
     .last-updated { font-size: 13px; color: #6b7280; }
+
+    /* ── Manual Control Card ──────────────────────────────── */
+    .control-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      border-top: 3px solid #6366f1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .control-info h3 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .control-info p  { font-size: 13px; color: #6b7280; }
+    .control-mode-badge {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 10px;
+      margin-left: 8px;
+    }
+    .mode-auto   { background: #eff6ff; color: #1d4ed8; }
+    .mode-manual { background: #fdf4ff; color: #7e22ce; }
+
+    /* Toggle button */
+    .toggle-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .toggle-btn span { font-size: 14px; font-weight: 600; color: #374151; }
+    .switch {
+      position: relative;
+      width: 56px;
+      height: 28px;
+      cursor: pointer;
+    }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute;
+      inset: 0;
+      background: #d1d5db;
+      border-radius: 28px;
+      transition: background 0.3s;
+    }
+    .slider:before {
+      content: '';
+      position: absolute;
+      width: 22px; height: 22px;
+      left: 3px; top: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.3s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .switch input:checked + .slider { background: #22c55e; }
+    .switch input:checked + .slider:before { transform: translateX(28px); }
+    .toggle-status { font-size: 13px; min-width: 60px; }
+    .toggle-status.on  { color: #065f46; font-weight: 600; }
+    .toggle-status.off { color: #6b7280; }
 
     /* Sensor Cards */
     .cards-grid {
@@ -96,7 +207,7 @@
     .npk-p { background: #f97316; }
     .npk-k { background: #a855f7; }
 
-    /* ── DSS Panel ────────────────────────────────────────────── */
+    /* DSS Panel */
     .dss-panel {
       background: white;
       border-radius: 12px;
@@ -105,126 +216,57 @@
       margin-bottom: 24px;
       border-top: 3px solid #1a6b3c;
     }
-    .dss-panel h2 {
-      font-size: 15px;
-      color: #6b7280;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 20px;
-    }
-
-    /* Overall health score */
+    .dss-panel h2 { font-size: 15px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 20px; }
     .health-score-row {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      margin-bottom: 24px;
-      padding-bottom: 20px;
+      display: flex; align-items: center; gap: 20px;
+      margin-bottom: 24px; padding-bottom: 20px;
       border-bottom: 1px solid #f3f4f6;
     }
     .score-circle {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      font-weight: 700;
+      width: 80px; height: 80px; border-radius: 50%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      flex-shrink: 0; font-weight: 700;
     }
-    .score-circle .score-num  { font-size: 26px; line-height: 1; }
+    .score-circle .score-num   { font-size: 26px; line-height: 1; }
     .score-circle .score-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; }
     .score-good    { background: #d1fae5; color: #065f46; }
     .score-warning { background: #fef3c7; color: #92400e; }
     .score-danger  { background: #fee2e2; color: #991b1b; }
     .health-text h3 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
     .health-text p  { font-size: 14px; color: #6b7280; }
-
-    /* Alert items */
     .alerts-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 12px;
-      margin-bottom: 20px;
+      gap: 12px; margin-bottom: 20px;
     }
     .alert-item {
-      border-radius: 10px;
-      padding: 14px 16px;
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
+      border-radius: 10px; padding: 14px 16px;
+      display: flex; gap: 12px; align-items: flex-start;
     }
     .alert-item.good    { background: #f0fdf4; border: 1px solid #bbf7d0; }
     .alert-item.warning { background: #fffbeb; border: 1px solid #fde68a; }
     .alert-item.danger  { background: #fef2f2; border: 1px solid #fecaca; }
     .alert-item.info    { background: #eff6ff; border: 1px solid #bfdbfe; }
     .alert-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
-    .alert-content .alert-title {
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 3px;
-    }
+    .alert-content .alert-title { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
     .alert-item.good    .alert-title { color: #065f46; }
     .alert-item.warning .alert-title { color: #92400e; }
     .alert-item.danger  .alert-title { color: #991b1b; }
     .alert-item.info    .alert-title { color: #1e40af; }
-    .alert-content .alert-desc {
-      font-size: 13px;
-      color: #6b7280;
-      line-height: 1.5;
-    }
-
-    /* Action steps */
-    .actions-section h3 {
-      font-size: 14px;
-      font-weight: 600;
-      color: #374151;
-      margin-bottom: 12px;
-      padding-top: 16px;
-      border-top: 1px solid #f3f4f6;
-    }
+    .alert-content .alert-desc { font-size: 13px; color: #6b7280; line-height: 1.5; }
+    .actions-section h3 { font-size: 14px; font-weight: 600; color: #374151; margin-bottom: 12px; padding-top: 16px; border-top: 1px solid #f3f4f6; }
     .action-list { display: flex; flex-direction: column; gap: 8px; }
-    .action-step {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      padding: 12px 14px;
-      background: #f9fafb;
-      border-radius: 8px;
-      font-size: 14px;
-    }
-    .action-step .step-num {
-      background: #1a6b3c;
-      color: white;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: 700;
-      flex-shrink: 0;
-    }
+    .action-step { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; background: #f9fafb; border-radius: 8px; font-size: 14px; }
+    .action-step .step-num { background: #1a6b3c; color: white; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
     .action-step .step-text { color: #374151; line-height: 1.5; }
-    .action-step .step-text strong { color: #1a202c; }
 
     /* Chart */
     .chart-card {
-      background: white;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-      margin-bottom: 24px;
+      background: white; border-radius: 12px; padding: 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08); margin-bottom: 24px;
     }
-    .chart-card h3 {
-      font-size: 14px;
-      color: #6b7280;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 16px;
-    }
+    .chart-card h3 { font-size: 14px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px; }
     canvas { max-height: 260px; }
 
     footer { text-align: center; font-size: 12px; color: #9ca3af; padding: 16px; }
@@ -239,13 +281,41 @@
 
 <div class="container">
 
+  <!-- Offline Banner -->
+  <div class="offline-banner" id="offline-banner">
+    <div class="offline-dot"></div>
+    <span>⚠️ ESP32 is offline — last data received <span id="offline-duration">—</span> ago. Sensor readings may be outdated.</span>
+  </div>
+
   <!-- Status Bar -->
   <div class="status-bar">
-    <div class="left">
-      <span style="font-size:14px; font-weight:600;">Irrigation Status:</span>
+    <div class="status-left">
+      <div class="system-status online" id="system-status">
+        <div class="status-dot"></div>
+        <span id="system-status-text">Online</span>
+      </div>
+      <span style="font-size:14px; font-weight:600;">Irrigation:</span>
       <span class="irrigation-badge off" id="irrigation-badge">Loading...</span>
     </div>
     <span class="last-updated" id="last-updated">Last updated: —</span>
+  </div>
+
+  <!-- Manual Control Card -->
+  <div class="control-card">
+    <div class="control-info">
+      <h3>Manual Irrigation Control
+        <span class="control-mode-badge mode-auto" id="mode-badge">Auto Mode</span>
+      </h3>
+      <p id="control-desc">System is running on automatic mode — irrigation is managed by soil moisture thresholds.</p>
+    </div>
+    <div class="toggle-btn">
+      <span>Irrigation</span>
+      <label class="switch">
+        <input type="checkbox" id="manual-toggle" onchange="handleManualToggle(this.checked)">
+        <span class="slider"></span>
+      </label>
+      <span class="toggle-status off" id="toggle-status">OFF</span>
+    </div>
   </div>
 
   <!-- Sensor Cards -->
@@ -301,7 +371,7 @@
     </div>
   </div>
 
-  <!-- DSS Recommendation Panel -->
+  <!-- DSS Panel -->
   <div class="dss-panel">
     <h2>🧠 Decision Support — Crop Recommendations</h2>
     <div class="health-score-row">
@@ -332,8 +402,9 @@
 <footer>Rooftop Horticulture DSS &mdash; Data refreshes every 5 seconds</footer>
 
 <script>
-  // ── Firebase Config ──────────────────────────────────────────
-  const FIREBASE_URL = "https://rooftop-horticulture-default-rtdb.asia-southeast1.firebasedatabase.app/sensor/latest.json";
+  const FIREBASE_BASE = "https://rooftop-horticulture-default-rtdb.asia-southeast1.firebasedatabase.app";
+  const FIREBASE_URL  = FIREBASE_BASE + "/sensor/latest.json";
+  const CONTROL_URL   = FIREBASE_BASE + "/control/manualIrrigation.json";
 
   // ── Clock ────────────────────────────────────────────────────
   function updateClock() {
@@ -341,6 +412,91 @@
   }
   setInterval(updateClock, 1000);
   updateClock();
+
+  // ── Offline Detection ────────────────────────────────────────
+  let lastDataTime = null;
+  const OFFLINE_THRESHOLD = 30000; // 30 seconds
+
+  function updateOnlineStatus() {
+    const statusEl     = document.getElementById('system-status');
+    const statusTextEl = document.getElementById('system-status-text');
+    const bannerEl     = document.getElementById('offline-banner');
+    const durationEl   = document.getElementById('offline-duration');
+
+    if (!lastDataTime) return;
+
+    const elapsed = Date.now() - lastDataTime;
+
+    if (elapsed > OFFLINE_THRESHOLD) {
+      statusEl.className = 'system-status offline';
+      statusTextEl.textContent = 'Offline';
+      bannerEl.classList.add('visible');
+
+      const secs = Math.floor(elapsed / 1000);
+      const mins = Math.floor(secs / 60);
+      durationEl.textContent = mins > 0 ? `${mins} min ${secs % 60} sec` : `${secs} sec`;
+    } else {
+      statusEl.className = 'system-status online';
+      statusTextEl.textContent = 'Online';
+      bannerEl.classList.remove('visible');
+    }
+  }
+  setInterval(updateOnlineStatus, 5000);
+
+  // ── Manual Irrigation Toggle ─────────────────────────────────
+  let manualState = false;
+
+  async function handleManualToggle(isOn) {
+    manualState = isOn;
+
+    // Write to Firebase /control/manualIrrigation
+    try {
+      await fetch(CONTROL_URL, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(isOn)
+      });
+    } catch (err) {
+      console.error('Control write error:', err);
+    }
+
+    updateToggleUI(isOn);
+  }
+
+  function updateToggleUI(isOn) {
+    const badge    = document.getElementById('mode-badge');
+    const desc     = document.getElementById('control-desc');
+    const status   = document.getElementById('toggle-status');
+    const checkbox = document.getElementById('manual-toggle');
+
+    checkbox.checked = isOn;
+    status.textContent = isOn ? 'ON' : 'OFF';
+    status.className   = 'toggle-status ' + (isOn ? 'on' : 'off');
+
+    if (isOn) {
+      badge.textContent  = 'Manual Mode';
+      badge.className    = 'control-mode-badge mode-manual';
+      desc.textContent   = 'Manual override is ACTIVE — automatic irrigation is suspended. Irrigation valve is forced ON.';
+    } else {
+      badge.textContent  = 'Auto Mode';
+      badge.className    = 'control-mode-badge mode-auto';
+      desc.textContent   = 'System is running on automatic mode — irrigation is managed by soil moisture thresholds.';
+    }
+  }
+
+  // Sync toggle state from Firebase on load
+  async function syncControlState() {
+    try {
+      const res  = await fetch(CONTROL_URL + '?nocache=' + Date.now());
+      const data = await res.json();
+      if (data !== null) {
+        manualState = data;
+        updateToggleUI(data);
+      }
+    } catch (err) {
+      console.error('Control sync error:', err);
+    }
+  }
 
   // ── Chart Setup ──────────────────────────────────────────────
   const maxPoints = 20;
@@ -367,38 +523,36 @@
   });
 
   // ── DSS Engine ───────────────────────────────────────────────
-  // Thresholds based on general-purpose rooftop horticulture
   const THRESHOLDS = {
-    moisture:    { low: 20,   high: 80,   unit: '%' },
-    temperature: { low: 15,   high: 35,   unit: '°C' },
-    light:       { low: 200,  high: 10000, unit: 'lux' },
-    ec:          { low: 200,  high: 2000,  unit: 'µS/cm' },
-    salinity:    { low: 0,    high: 500,   unit: 'mg/L' },
-    nitrogen:    { low: 100,  high: 300,   unit: 'mg/kg' },
-    phosphorus:  { low: 20,   high: 100,   unit: 'mg/kg' },
-    potassium:   { low: 100,  high: 300,   unit: 'mg/kg' },
+    moisture:    { low: 20,  high: 80   },
+    temperature: { low: 15,  high: 35   },
+    light:       { low: 200, high: 10000 },
+    ec:          { low: 200, high: 2000  },
+    salinity:    { low: 0,   high: 500   },
+    nitrogen:    { low: 100, high: 300   },
+    phosphorus:  { low: 20,  high: 100   },
+    potassium:   { low: 100, high: 300   },
   };
 
   function runDSS(data) {
-    const alerts  = [];
-    const actions = [];
+    const alerts = [], actions = [];
     let score = 100;
 
-    const t  = data.temperature ?? 0;
-    const m  = data.moisture    ?? 0;
-    const l  = data.light       ?? 0;
-    const ec = data.ec          ?? 0;
-    const s  = data.salinity    ?? 0;
-    const n  = data.nitrogen    ?? 0;
-    const p  = data.phosphorus  ?? 0;
-    const k  = data.potassium   ?? 0;
+    const t   = data.temperature ?? 0;
+    const m   = data.moisture    ?? 0;
+    const l   = data.light       ?? 0;
+    const ec  = data.ec          ?? 0;
+    const s   = data.salinity    ?? 0;
+    const n   = data.nitrogen    ?? 0;
+    const p   = data.phosphorus  ?? 0;
+    const k   = data.potassium   ?? 0;
     const irr = data.irrigation;
 
-    // ── Moisture ──────────────────────────────────────────────
+    // Moisture
     if (m < THRESHOLDS.moisture.low) {
-      const severity = m < 10 ? 'danger' : 'warning';
-      score -= severity === 'danger' ? 25 : 15;
-      alerts.push({ type: severity, icon: '💧', title: 'Low Soil Moisture', desc: `Moisture is ${m.toFixed(1)}% — below the ${THRESHOLDS.moisture.low}% minimum. ${irr ? 'Irrigation is currently ON.' : 'Irrigation should activate soon.'}` });
+      const sev = m < 10 ? 'danger' : 'warning';
+      score -= sev === 'danger' ? 25 : 15;
+      alerts.push({ type: sev, icon: '💧', title: 'Low Soil Moisture', desc: `Moisture is ${m.toFixed(1)}% — below the ${THRESHOLDS.moisture.low}% minimum. ${irr ? 'Irrigation is currently ON.' : 'Irrigation should activate soon.'}` });
       actions.push(irr ? 'Monitor irrigation — system is watering to restore moisture levels.' : 'Check solenoid valve and relay — irrigation should have triggered automatically.');
     } else if (m > THRESHOLDS.moisture.high) {
       score -= 15;
@@ -408,10 +562,10 @@
       alerts.push({ type: 'good', icon: '✅', title: 'Moisture Optimal', desc: `Soil moisture at ${m.toFixed(1)}% — within the ideal range of ${THRESHOLDS.moisture.low}–${THRESHOLDS.moisture.high}%.` });
     }
 
-    // ── Temperature ───────────────────────────────────────────
+    // Temperature
     if (t > THRESHOLDS.temperature.high) {
       score -= 20;
-      alerts.push({ type: 'danger', icon: '🔥', title: 'High Temperature', desc: `Temperature is ${t.toFixed(1)}°C — above ${THRESHOLDS.temperature.high}°C. Heat stress can damage crops and reduce yield.` });
+      alerts.push({ type: 'danger', icon: '🔥', title: 'High Temperature', desc: `Temperature is ${t.toFixed(1)}°C — above ${THRESHOLDS.temperature.high}°C. Heat stress can damage crops.` });
       actions.push('Install shade netting or increase ventilation to reduce heat stress on plants.');
       actions.push('Increase irrigation frequency slightly to compensate for higher evapotranspiration.');
     } else if (t < THRESHOLDS.temperature.low) {
@@ -422,7 +576,7 @@
       alerts.push({ type: 'good', icon: '✅', title: 'Temperature Optimal', desc: `Temperature at ${t.toFixed(1)}°C — ideal growing conditions for most rooftop crops.` });
     }
 
-    // ── Light ─────────────────────────────────────────────────
+    // Light
     if (l < THRESHOLDS.light.low) {
       score -= 15;
       alerts.push({ type: 'warning', icon: '🌑', title: 'Insufficient Light', desc: `Light level is ${l.toFixed(0)} lux — below the ${THRESHOLDS.light.low} lux minimum for healthy photosynthesis.` });
@@ -431,10 +585,10 @@
       alerts.push({ type: 'good', icon: '☀️', title: 'Light Adequate', desc: `Light intensity at ${l.toFixed(0)} lux — sufficient for active photosynthesis and healthy growth.` });
     }
 
-    // ── EC ────────────────────────────────────────────────────
+    // EC
     if (ec > THRESHOLDS.ec.high) {
       score -= 15;
-      alerts.push({ type: 'danger', icon: '⚡', title: 'High EC — Salt Stress Risk', desc: `EC is ${ec} µS/cm — above ${THRESHOLDS.ec.high} µS/cm. Nutrient toxicity and salt stress likely.` });
+      alerts.push({ type: 'danger', icon: '⚡', title: 'High EC — Salt Stress Risk', desc: `EC is ${ec} µS/cm — above ${THRESHOLDS.ec.high} µS/cm. Nutrient toxicity likely.` });
       actions.push('Flush soil with clean water to reduce salt accumulation. Reduce fertilizer dosage.');
     } else if (ec < THRESHOLDS.ec.low && ec > 0) {
       score -= 10;
@@ -442,15 +596,15 @@
       actions.push('Apply a balanced liquid fertilizer to restore nutrient levels in the soil.');
     }
 
-    // ── Salinity ──────────────────────────────────────────────
+    // Salinity
     if (s > THRESHOLDS.salinity.high) {
       score -= 10;
-      alerts.push({ type: 'warning', icon: '🧂', title: 'High Salinity', desc: `Salinity at ${s} mg/L — above safe limit of ${THRESHOLDS.salinity.high} mg/L. Can inhibit water uptake by roots.` });
+      alerts.push({ type: 'warning', icon: '🧂', title: 'High Salinity', desc: `Salinity at ${s} mg/L — above safe limit of ${THRESHOLDS.salinity.high} mg/L.` });
       actions.push('Leach soil with excess water to flush out soluble salts. Avoid saline water sources.');
     }
 
-    // ── NPK ───────────────────────────────────────────────────
-    let npkIssues = [];
+    // NPK
+    const npkIssues = [];
     if (n < THRESHOLDS.nitrogen.low)   { npkIssues.push(`Nitrogen (${n} mg/kg) is low — apply urea or ammonium sulfate fertilizer`); score -= 8; }
     if (n > THRESHOLDS.nitrogen.high)  { npkIssues.push(`Nitrogen (${n} mg/kg) is excessive — reduce nitrogen fertilizer immediately`); score -= 5; }
     if (p < THRESHOLDS.phosphorus.low) { npkIssues.push(`Phosphorus (${p} mg/kg) is low — apply superphosphate or bone meal`); score -= 8; }
@@ -460,50 +614,42 @@
       alerts.push({ type: 'warning', icon: '🌱', title: 'Nutrient Imbalance Detected', desc: npkIssues.join('. ') + '.' });
       actions.push('Conduct a full soil nutrient correction using a targeted NPK fertilizer mix based on deficiencies above.');
     } else if (n > 0 || p > 0 || k > 0) {
-      alerts.push({ type: 'good', icon: '✅', title: 'Nutrient Levels Adequate', desc: `N: ${n}, P: ${p}, K: ${k} mg/kg — all within acceptable ranges for general-purpose crops.` });
+      alerts.push({ type: 'good', icon: '✅', title: 'Nutrient Levels Adequate', desc: `N: ${n}, P: ${p}, K: ${k} mg/kg — all within acceptable ranges.` });
     }
 
-    // ── Irrigation Status ─────────────────────────────────────
-    alerts.push({
-      type: irr ? 'info' : 'good',
-      icon: irr ? '🚿' : '⏸',
-      title: irr ? 'Irrigation Active' : 'Irrigation Standby',
-      desc: irr
-        ? 'Solenoid valve is open — water is flowing to the rooftop garden.'
-        : 'System is in standby — moisture levels do not require irrigation currently.'
-    });
+    // Irrigation status alert
+    if (manualState) {
+      alerts.push({ type: 'info', icon: '🎛️', title: 'Manual Override Active', desc: 'Irrigation is being controlled manually from the dashboard. Automatic logic is suspended.' });
+    } else {
+      alerts.push({
+        type: irr ? 'info' : 'good',
+        icon: irr ? '🚿' : '⏸',
+        title: irr ? 'Irrigation Active' : 'Irrigation Standby',
+        desc: irr ? 'Solenoid valve is open — water is flowing to the rooftop garden.' : 'System is in standby — moisture levels do not require irrigation currently.'
+      });
+    }
 
-    // ── Score & Title ─────────────────────────────────────────
     score = Math.max(0, Math.min(100, score));
     let title, desc, scoreClass;
     if (score >= 75) {
-      title = 'Crop Conditions Good';
-      desc  = 'Your rooftop garden is in good health. Continue current practices and monitor regularly.';
-      scoreClass = 'score-good';
+      title = 'Crop Conditions Good'; desc = 'Your rooftop garden is in good health. Continue current practices and monitor regularly.'; scoreClass = 'score-good';
     } else if (score >= 50) {
-      title = 'Attention Required';
-      desc  = 'Some parameters need correction. Follow the action steps below to restore optimal conditions.';
-      scoreClass = 'score-warning';
+      title = 'Attention Required'; desc = 'Some parameters need correction. Follow the action steps below to restore optimal conditions.'; scoreClass = 'score-warning';
     } else {
-      title = 'Critical Intervention Needed';
-      desc  = 'Multiple parameters are outside safe ranges. Immediate action is required to prevent crop loss.';
-      scoreClass = 'score-danger';
+      title = 'Critical Intervention Needed'; desc = 'Multiple parameters are outside safe ranges. Immediate action is required to prevent crop loss.'; scoreClass = 'score-danger';
     }
 
     return { score, title, desc, scoreClass, alerts, actions };
   }
 
   function renderDSS(result) {
-    // Health score
     const circle = document.getElementById('health-circle');
     circle.className = 'score-circle ' + result.scoreClass;
     document.getElementById('health-score').textContent = result.score;
     document.getElementById('health-title').textContent = result.title;
     document.getElementById('health-desc').textContent  = result.desc;
 
-    // Alerts
-    const grid = document.getElementById('alerts-grid');
-    grid.innerHTML = result.alerts.map(a => `
+    document.getElementById('alerts-grid').innerHTML = result.alerts.map(a => `
       <div class="alert-item ${a.type}">
         <span class="alert-icon">${a.icon}</span>
         <div class="alert-content">
@@ -513,102 +659,83 @@
       </div>
     `).join('');
 
-    // Actions
     const list = document.getElementById('action-list');
-    if (result.actions.length === 0) {
-      list.innerHTML = '<div class="action-step"><span class="step-num">✓</span><span class="step-text">No immediate actions required — maintain current practices.</span></div>';
-    } else {
-      list.innerHTML = result.actions.map((a, i) => `
-        <div class="action-step">
-          <span class="step-num">${i + 1}</span>
-          <span class="step-text">${a}</span>
-        </div>
-      `).join('');
-    }
+    list.innerHTML = result.actions.length === 0
+      ? '<div class="action-step"><span class="step-num">✓</span><span class="step-text">No immediate actions required — maintain current practices.</span></div>'
+      : result.actions.map((a, i) => `
+          <div class="action-step">
+            <span class="step-num">${i + 1}</span>
+            <span class="step-text">${a}</span>
+          </div>`).join('');
   }
 
-  // ── Fetch & Update ───────────────────────────────────────────
+  // ── Fetch Latest Data ────────────────────────────────────────
   async function fetchData() {
     try {
-      const url = FIREBASE_URL + '?nocache=' + Date.now();
-      const res  = await fetch(url);
+      const res  = await fetch(FIREBASE_URL + '?nocache=' + Date.now());
       const data = await res.json();
 
-      // Cards
+      lastDataTime = Date.now();
+      updateOnlineStatus();
+
       document.getElementById('val-temp').textContent     = data.temperature?.toFixed(1) ?? '—';
       document.getElementById('val-moisture').textContent = data.moisture?.toFixed(1)    ?? '—';
       document.getElementById('val-light').textContent    = data.light?.toFixed(0)       ?? '—';
       document.getElementById('val-ec').textContent       = data.ec                      ?? '—';
       document.getElementById('val-salinity').textContent = data.salinity                ?? '—';
 
-      // NPK
-      const nVal = data.nitrogen   ?? 0;
-      const pVal = data.phosphorus ?? 0;
-      const kVal = data.potassium  ?? 0;
-      const maxNPK = 300;
+      const nVal = data.nitrogen ?? 0, pVal = data.phosphorus ?? 0, kVal = data.potassium ?? 0;
       document.getElementById('val-n').textContent = nVal + ' mg/kg';
       document.getElementById('val-p').textContent = pVal + ' mg/kg';
       document.getElementById('val-k').textContent = kVal + ' mg/kg';
-      document.getElementById('bar-n').style.width = Math.min(nVal / maxNPK * 100, 100) + '%';
-      document.getElementById('bar-p').style.width = Math.min(pVal / maxNPK * 100, 100) + '%';
-      document.getElementById('bar-k').style.width = Math.min(kVal / maxNPK * 100, 100) + '%';
+      document.getElementById('bar-n').style.width = Math.min(nVal / 300 * 100, 100) + '%';
+      document.getElementById('bar-p').style.width = Math.min(pVal / 300 * 100, 100) + '%';
+      document.getElementById('bar-k').style.width = Math.min(kVal / 300 * 100, 100) + '%';
 
-      // Irrigation badge
       const badge = document.getElementById('irrigation-badge');
-      if (data.irrigation) {
-        badge.textContent = '💧 ON — Irrigating';
-        badge.className = 'irrigation-badge on';
-      } else {
-        badge.textContent = '⏸ OFF';
-        badge.className = 'irrigation-badge off';
-      }
+      badge.textContent = data.irrigation ? '💧 ON — Irrigating' : '⏸ OFF';
+      badge.className   = 'irrigation-badge ' + (data.irrigation ? 'on' : 'off');
 
-      // Last updated
       document.getElementById('last-updated').textContent = 'Last updated: ' + new Date().toLocaleTimeString();
 
-      // Chart
       const timeLabel = data.timestamp ? data.timestamp.split(' ')[1] : new Date().toLocaleTimeString();
       if (labels.length === 0 || labels[labels.length - 1] !== timeLabel) {
-        labels.push(timeLabel);
-        tempData.push(data.temperature);
-        moistData.push(data.moisture);
+        labels.push(timeLabel); tempData.push(data.temperature); moistData.push(data.moisture);
         if (labels.length > maxPoints) { labels.shift(); tempData.shift(); moistData.shift(); }
         chart.update();
       }
 
-      // DSS
-      const result = runDSS(data);
-      renderDSS(result);
+      renderDSS(runDSS(data));
 
     } catch (err) {
       console.error('Fetch error:', err);
     }
   }
 
-  // ── Fetch History ──────────────────────────────────────────
- async function fetchHistory() {
-  try {
-    const url = "https://rooftop-horticulture-default-rtdb.asia-southeast1.firebasedatabase.app/sensor/history.json?orderBy=%22timestamp%22&limitToLast=20&nocache=" + Date.now();
-    const res  = await fetch(url);
-    const data = await res.json();
-    if (!data) return;
+  // ── Fetch History ────────────────────────────────────────────
+  async function fetchHistory() {
+    try {
+      const url  = FIREBASE_BASE + "/sensor/history.json?orderBy=%22timestamp%22&limitToLast=20&nocache=" + Date.now();
+      const res  = await fetch(url);
+      const data = await res.json();
+      if (!data) return;
 
-    const entries = Object.values(data).sort((a, b) => a.timestamp.localeCompare(b.timestamp));
-
-    chart.data.labels           = entries.map(e => e.timestamp ? e.timestamp.split(' ')[1] : '');
-    chart.data.datasets[0].data = entries.map(e => e.temperature);
-    chart.data.datasets[1].data = entries.map(e => e.moisture);
-    chart.update();
-
-  } catch (err) {
-    console.error('History fetch error:', err);
+      const entries = Object.values(data).sort((a, b) => a.timestamp.localeCompare(b.timestamp));
+      chart.data.labels           = entries.map(e => e.timestamp ? e.timestamp.split(' ')[1] : '');
+      chart.data.datasets[0].data = entries.map(e => e.temperature);
+      chart.data.datasets[1].data = entries.map(e => e.moisture);
+      chart.update();
+    } catch (err) {
+      console.error('History fetch error:', err);
+    }
   }
-}
 
-fetchData();
-fetchHistory();
-setInterval(fetchData, 5000);
-setInterval(fetchHistory, 30000);
+  // ── Init ─────────────────────────────────────────────────────
+  syncControlState();
+  fetchData();
+  fetchHistory();
+  setInterval(fetchData, 5000);
+  setInterval(fetchHistory, 30000);
 </script>
 
 </body>
