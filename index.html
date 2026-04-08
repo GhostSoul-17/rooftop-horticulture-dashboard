@@ -415,7 +415,7 @@
 
   // ── Offline Detection ────────────────────────────────────────
   let lastDataTime = null;
-  const OFFLINE_THRESHOLD = 30000; // 30 seconds
+  const OFFLINE_THRESHOLD = 15000; // 15 seconds
 
   function updateOnlineStatus() {
     const statusEl     = document.getElementById('system-status');
@@ -441,7 +441,7 @@
       bannerEl.classList.remove('visible');
     }
   }
-  setInterval(updateOnlineStatus, 5000);
+  setInterval(updateOnlineStatus, 3000);
 
   // ── Manual Irrigation Toggle ─────────────────────────────────
   let manualState = false;
