@@ -644,16 +644,39 @@
   }
 
   // ── Fetch History ──────────────────────────────────────────
-  async function fetchHistory() {
+async function fetchHistory() {
     try {
       const res  = await fetch(FIREBASE_BASE + '/sensor/history.json?orderBy=%22timestamp%22&limitToLast=20&nocache=' + Date.now());
       const data = await res.json();
       if (!data) return;
-      const entries = Object.values(data).sort(function(a,b) { return a.timestamp.localeCompare(b.timestamp); });
-      chart.data.labels           = entries.map(function(e) { return e.timestamp ? e.timestamp.split(' ')[1] : ''; });
-      chart.data.datasets[0].data = entries.map(function(e) { return e.temperature; });
-      chart.data.datasets[1].data = entries.map(function(e) { return e.moisture; });
+
+      const entries = Object.values(data).sort(function(a,b) {
+        return a.timestamp.localeCompare(b.timestamp);
+      });
+
+      // Debug — check what we're getting
+      console.log('History entries:', entries.length);
+      console.log('First entry:', entries[0]);
+
+      const newLabels = entries.map(function(e) {
+        return e.timestamp ? e.timestamp.split(' ')[1] : '';
+      });
+      const newTemps  = entries.map(function(e) {
+        return e.temperature != null ? parseFloat(e.temperature) : null;
+      });
+      const newMoist  = entries.map(function(e) {
+        return e.moisture != null ? parseFloat(e.moisture) : null;
+      });
+
+      console.log('Labels:', newLabels);
+      console.log('Temps:', newTemps);
+      console.log('Moist:', newMoist);
+
+      chart.data.labels           = newLabels;
+      chart.data.datasets[0].data = newTemps;
+      chart.data.datasets[1].data = newMoist;
       chart.update();
+
     } catch(e) { console.error('History error:', e); }
   }
 
