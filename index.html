@@ -632,7 +632,7 @@
       document.getElementById('last-updated').textContent = 'Last updated: ' + new Date().toLocaleTimeString();
 
       const timeLabel = data.timestamp ? data.timestamp.split(' ')[1] : new Date().toLocaleTimeString();
-      if (labels.length === 0 || labels[labels.length-1] !== timeLabel) {
+      if (true) {
         labels.push(timeLabel); tempData.push(data.temperature); moistData.push(data.moisture);
         if (labels.length > maxPoints) { labels.shift(); tempData.shift(); moistData.shift(); }
         chart.update();
