@@ -485,7 +485,26 @@
 </div>
   <!-- DSS Panel -->
   <div class="dss-panel">
-    <h2>🧠 Decision Support — Crop Recommendations</h2>
+  <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:20px;">
+    <h2 style="margin-bottom:0;">🧠 Decision Support — Crop Recommendations</h2>
+    <select id="crop-selector" onchange="onCropChange()" style="
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      font-size: 14px;
+      font-family: 'Segoe UI', sans-serif;
+      background: white;
+      color: #374151;
+      cursor: pointer;
+      outline: none;
+    ">
+      <option value="general">🌿 General (All Crops)</option>
+      <option value="spinach">🥬 Spinach</option>
+      <option value="tomato">🍅 Tomato</option>
+      <option value="chilli">🌶️ Chilli</option>
+      <option value="ladyfinger">🫛 Lady Finger</option>
+    </select>
+  </div>
     <div class="health-score-row">
       <div class="score-circle score-good" id="health-circle">
         <span class="score-num" id="health-score">—</span>
@@ -635,7 +654,10 @@
   });
 
   // ── DSS Engine ───────────────────────────────────────────────
-  const THRESHOLDS = {
+  // ── Crop-specific thresholds ─────────────────────────────────
+const CROP_THRESHOLDS = {
+  general: {
+    name: "All Crops",
     moisture:    { low: 20,  high: 80   },
     temperature: { low: 15,  high: 35   },
     light:       { low: 200, high: 10000 },
@@ -644,22 +666,188 @@
     nitrogen:    { low: 100, high: 300   },
     phosphorus:  { low: 20,  high: 100   },
     potassium:   { low: 100, high: 300   },
-  };
+  },
+  spinach: {
+    name: "Spinach",
+    moisture:    { low: 40,  high: 75   },
+    temperature: { low: 15,  high: 28   },
+    light:       { low: 200, high: 8000  },
+    ec:          { low: 150, high: 1500  },
+    salinity:    { low: 0,   high: 400   },
+    nitrogen:    { low: 80,  high: 160   },
+    phosphorus:  { low: 30,  high: 80    },
+    potassium:   { low: 150, high: 260   },
+  },
+  tomato: {
+    name: "Tomato",
+    moisture:    { low: 50,  high: 80   },
+    temperature: { low: 20,  high: 32   },
+    light:       { low: 400, high: 10000 },
+    ec:          { low: 200, high: 2000  },
+    salinity:    { low: 0,   high: 500   },
+    nitrogen:    { low: 130, high: 240   },
+    phosphorus:  { low: 50,  high: 120   },
+    potassium:   { low: 190, high: 320   },
+  },
+  chilli: {
+    name: "Chilli",
+    moisture:    { low: 35,  high: 70   },
+    temperature: { low: 22,  high: 35   },
+    light:       { low: 400, high: 10000 },
+    ec:          { low: 150, high: 1800  },
+    salinity:    { low: 0,   high: 450   },
+    nitrogen:    { low: 100, high: 200   },
+    phosphorus:  { low: 40,  high: 100   },
+    potassium:   { low: 170, high: 280   },
+  },
+  ladyfinger: {
+    name: "Lady Finger",
+    moisture:    { low: 45,  high: 80   },
+    temperature: { low: 24,  high: 38   },
+    light:       { low: 400, high: 10000 },
+    ec:          { low: 175, high: 1800  },
+    salinity:    { low: 0,   high: 450   },
+    nitrogen:    { low: 110, high: 210   },
+    phosphorus:  { low: 35,  high: 95    },
+    potassium:   { low: 175, high: 300   },
+  }
+};
 
-  function runDSS(data) {
-    const alerts = [], actions = [];
-    let score = 100;
+let selectedCrop = "general";
+let lastSensorData = null;
 
-    const t   = data.temperature ?? 0;
-    const m   = data.moisture    ?? 0;
-    const l   = data.light       ?? 0;
-    const ec  = data.ec          ?? 0;
-    const s   = data.salinity    ?? 0;
-    const n   = data.nitrogen    ?? 0;
-    const p   = data.phosphorus  ?? 0;
-    const k   = data.potassium   ?? 0;
-    const irr = data.irrigation;
+function onCropChange() {
+  selectedCrop = document.getElementById('crop-selector').value;
+  if (lastSensorData) {
+    renderDSS(runDSS(lastSensorData));
+  }
+}
 
+function runDSS(data) {
+  const T = CROP_THRESHOLDS[selectedCrop];
+  const alerts = [], actions = [];
+  let score = 100;
+
+  const t   = data.temperature ?? 0;
+  const m   = data.moisture    ?? 0;
+  const l   = data.light       ?? 0;
+  const ec  = data.ec          ?? 0;
+  const s   = data.salinity    ?? 0;
+  const n   = data.nitrogen    ?? 0;
+  const p   = data.phosphorus  ?? 0;
+  const k   = data.potassium   ?? 0;
+  const irr = data.irrigation;
+
+  // Moisture
+  if (m < T.moisture.low) {
+    const sev = m < T.moisture.low / 2 ? 'danger' : 'warning';
+    score -= sev === 'danger' ? 25 : 15;
+    alerts.push({ type: sev, icon: '💧', title: 'Low Soil Moisture',
+      desc: `Moisture is ${m.toFixed(1)}% — below ${T.name} minimum of ${T.moisture.low}%. ${irr ? 'Irrigation is ON.' : 'Irrigation should activate soon.'}` });
+    actions.push(irr ? 'Monitor irrigation — system is watering to restore moisture.' : 'Check solenoid valve — irrigation should have triggered automatically.');
+  } else if (m > T.moisture.high) {
+    score -= 15;
+    alerts.push({ type: 'warning', icon: '🌊', title: 'High Soil Moisture',
+      desc: `Moisture is ${m.toFixed(1)}% — above ${T.name} maximum of ${T.moisture.high}%. Risk of root rot.` });
+    actions.push('Pause irrigation and improve drainage.');
+  } else {
+    alerts.push({ type: 'good', icon: '✅', title: 'Moisture Optimal',
+      desc: `Soil moisture at ${m.toFixed(1)}% — ideal for ${T.name} (${T.moisture.low}–${T.moisture.high}%).` });
+  }
+
+  // Temperature
+  if (t > T.temperature.high) {
+    score -= 20;
+    alerts.push({ type: 'danger', icon: '🔥', title: 'High Temperature',
+      desc: `Temperature ${t.toFixed(1)}°C exceeds ${T.name} maximum of ${T.temperature.high}°C. Heat stress likely.` });
+    actions.push(`Install shade netting to protect ${T.name} from heat stress.`);
+    actions.push('Increase irrigation slightly to compensate for higher evapotranspiration.');
+  } else if (t < T.temperature.low) {
+    score -= 15;
+    alerts.push({ type: 'warning', icon: '🧊', title: 'Low Temperature',
+      desc: `Temperature ${t.toFixed(1)}°C is below ${T.name} minimum of ${T.temperature.low}°C. Growth will slow.` });
+    actions.push(`Protect ${T.name} with row covers or move grow bag to a warmer location.`);
+  } else {
+    alerts.push({ type: 'good', icon: '✅', title: 'Temperature Optimal',
+      desc: `Temperature ${t.toFixed(1)}°C is ideal for ${T.name} (${T.temperature.low}–${T.temperature.high}°C).` });
+  }
+
+  // Light
+  if (l < T.light.low) {
+    score -= 15;
+    alerts.push({ type: 'warning', icon: '🌑', title: 'Insufficient Light',
+      desc: `Light at ${l.toFixed(0)} lux is below ${T.name} minimum of ${T.light.low} lux.` });
+    actions.push(`Move ${T.name} grow bag to a sunnier spot or add grow lights.`);
+  } else {
+    alerts.push({ type: 'good', icon: '☀️', title: 'Light Adequate',
+      desc: `Light at ${l.toFixed(0)} lux is sufficient for ${T.name}.` });
+  }
+
+  // EC
+  if (ec > T.ec.high) {
+    score -= 15;
+    alerts.push({ type: 'danger', icon: '⚡', title: 'High EC',
+      desc: `EC ${ec} µS/cm exceeds ${T.name} maximum of ${T.ec.high} µS/cm. Salt stress risk.` });
+    actions.push('Flush soil with clean water and reduce fertilizer dosage.');
+  } else if (ec > 0 && ec < T.ec.low) {
+    score -= 10;
+    alerts.push({ type: 'info', icon: '📉', title: 'Low EC',
+      desc: `EC ${ec} µS/cm is below ${T.name} minimum of ${T.ec.low} µS/cm. Possible nutrient deficiency.` });
+    actions.push('Apply balanced liquid fertilizer to restore nutrient levels.');
+  }
+
+  // Salinity
+  if (s > T.salinity.high) {
+    score -= 10;
+    alerts.push({ type: 'warning', icon: '🧂', title: 'High Salinity',
+      desc: `Salinity ${s} mg/L exceeds safe limit of ${T.salinity.high} mg/L for ${T.name}.` });
+    actions.push('Leach soil with excess clean water to flush soluble salts.');
+  }
+
+  // NPK
+  const npkIssues = [];
+  if (n > 0 && n < T.nitrogen.low)    { npkIssues.push(`Nitrogen (${n} mg/kg) low for ${T.name} — apply urea or ammonium sulphate`); score -= 8; }
+  if (n > T.nitrogen.high)            { npkIssues.push(`Nitrogen (${n} mg/kg) excessive — reduce nitrogen fertilizer`); score -= 5; }
+  if (p > 0 && p < T.phosphorus.low)  { npkIssues.push(`Phosphorus (${p} mg/kg) low for ${T.name} — apply superphosphate`); score -= 8; }
+  if (k > 0 && k < T.potassium.low)   { npkIssues.push(`Potassium (${k} mg/kg) low for ${T.name} — apply potassium sulphate`); score -= 8; }
+
+  if (npkIssues.length > 0) {
+    alerts.push({ type: 'warning', icon: '🌱', title: 'Nutrient Imbalance',
+      desc: npkIssues.join('. ') + '.' });
+    actions.push('Apply targeted NPK fertilizer based on deficiencies listed above.');
+  } else if (n > 0 || p > 0 || k > 0) {
+    alerts.push({ type: 'good', icon: '✅', title: 'Nutrients Adequate',
+      desc: `N:${n}, P:${p}, K:${k} mg/kg — within optimal range for ${T.name}.` });
+  }
+
+  // Irrigation
+  if (manualState) {
+    alerts.push({ type: 'info', icon: '🎛️', title: 'Manual Override Active',
+      desc: 'Irrigation is being controlled manually from the dashboard.' });
+  } else {
+    alerts.push({ type: irr ? 'info' : 'good', icon: irr ? '🚿' : '⏸',
+      title: irr ? 'Irrigation Active' : 'Irrigation Standby',
+      desc: irr ? 'Solenoid valve is open — water is flowing.' : 'Moisture levels do not require irrigation currently.' });
+  }
+
+  score = Math.max(0, Math.min(100, score));
+  let title, desc, scoreClass;
+  if (score >= 75) {
+    title = `${T.name} Conditions Good`;
+    desc  = `Growing conditions are well suited for ${T.name}. Continue current practices.`;
+    scoreClass = 'score-good';
+  } else if (score >= 50) {
+    title = `${T.name} Needs Attention`;
+    desc  = `Some parameters are outside optimal range for ${T.name}. Follow action steps below.`;
+    scoreClass = 'score-warning';
+  } else {
+    title = `Critical — ${T.name} at Risk`;
+    desc  = `Multiple parameters are outside safe range for ${T.name}. Immediate action needed.`;
+    scoreClass = 'score-danger';
+  }
+
+  return { score, title, desc, scoreClass, alerts, actions };
+}
     // Moisture
     if (m < THRESHOLDS.moisture.low) {
       const sev = m < 10 ? 'danger' : 'warning';
@@ -894,6 +1082,7 @@ async function fetchMLPrediction() {
         chart.update();
       }
 
+      lastSensorData = data;
       renderDSS(runDSS(data));
 
     } catch (err) {
