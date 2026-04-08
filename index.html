@@ -205,7 +205,7 @@
 <script>
   // ── Firebase Config ──────────────────────────────────────────
   const FIREBASE_URL = "https://rooftop-horticulture-default-rtdb.asia-southeast1.firebasedatabase.app/sensor/latest.json";
-  const FIREBASE_HISTORY_URL = "https://rooftop-horticulture-default-rtdb.asia-southeast1.firebasedatabase.app/sensor/history.json?orderBy=%22timestamp%22&limitToLast=20";
+  const FIREBASE_HISTORY_URL = "https://rooftop-horticulture-default-rtdb.asia-southeast1.firebasedatabase.app/sensor/history.json?orderBy=%22timestamp%22&limitToLast=20&nocache=" + Date.now();
   // ── Clock ────────────────────────────────────────────────────
   function updateClock() {
     document.getElementById('clock').textContent = new Date().toLocaleTimeString();
@@ -261,7 +261,8 @@
   // ── Fetch & Update ───────────────────────────────────────────
   async function fetchData() {
     try {
-      const res  = await fetch(FIREBASE_URL);
+      const url = "https://rooftop-horticulture-default-rtdb.asia-southeast1.firebasedatabase.app/sensor/history.json?orderBy=%22timestamp%22&limitToLast=20&nocache=" + Date.now();
+      const res = await fetch(url);
       const data = await res.json();
 
       // Cards
