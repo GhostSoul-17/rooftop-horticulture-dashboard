@@ -654,10 +654,7 @@ async function fetchHistory() {
         return a.timestamp.localeCompare(b.timestamp);
       });
 
-      // Debug — check what we're getting
-      console.log('History entries:', entries.length);
-      console.log('First entry:', entries[0]);
-
+     
       const newLabels = entries.map(function(e) {
         return e.timestamp ? e.timestamp.split(' ')[1] : '';
       });
@@ -668,10 +665,7 @@ async function fetchHistory() {
         return e.moisture != null ? parseFloat(e.moisture) : null;
       });
 
-      console.log('Labels:', newLabels);
-      console.log('Temps:', newTemps);
-      console.log('Moist:', newMoist);
-
+     
       chart.data.labels           = newLabels;
       chart.data.datasets[0].data = newTemps;
       chart.data.datasets[1].data = newMoist;
