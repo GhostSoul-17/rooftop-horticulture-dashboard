@@ -191,6 +191,33 @@
     .chart-card h3 { font-size: 14px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px; }
     canvas { max-height: 260px; }
     footer { text-align: center; font-size: 12px; color: #9ca3af; padding: 16px; }
+
+    /* ── ET Panel ─────────────────────────────────────────────── */
+.et-panel { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); margin-bottom: 24px; border-top: 3px solid #10b981; }
+.et-panel h2 { font-size: 15px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 20px; }
+.et-top-row { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #f3f4f6; }
+.et-main { display: flex; flex-direction: column; align-items: center; justify-content: center; background: #ecfdf5; border-radius: 12px; padding: 16px 24px; min-width: 140px; flex-shrink: 0; }
+.et-main .et-value { font-size: 36px; font-weight: 700; color: #065f46; line-height: 1; }
+.et-main .et-unit  { font-size: 13px; color: #059669; margin-top: 4px; }
+.et-main .et-label { font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 6px; }
+.et-info { flex: 1; }
+.et-info h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; color: #1a202c; }
+.et-info p  { font-size: 14px; color: #6b7280; line-height: 1.6; }
+.et-layers { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.et-layer { background: #f9fafb; border-radius: 10px; padding: 14px 16px; }
+.et-layer .el-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.et-layer .el-name   { font-size: 13px; font-weight: 600; color: #374151; }
+.et-layer .el-value  { font-size: 14px; font-weight: 700; color: #10b981; }
+.et-layer .el-desc   { font-size: 12px; color: #9ca3af; line-height: 1.4; }
+.et-bar-bg   { background: #e5e7eb; border-radius: 6px; height: 6px; overflow: hidden; margin-top: 8px; }
+.et-bar-fill { height: 100%; border-radius: 6px; background: #10b981; transition: width 0.6s ease; }
+.et-threshold-row { display: flex; gap: 16px; flex-wrap: wrap; }
+.et-threshold-item { flex: 1; min-width: 140px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 14px 16px; text-align: center; }
+.et-threshold-item.stop { background: #fff7ed; border-color: #fed7aa; }
+.et-threshold-item .eti-label { font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+.et-threshold-item .eti-value { font-size: 24px; font-weight: 700; color: #065f46; }
+.et-threshold-item.stop .eti-value { color: #c2410c; }
+.et-threshold-item .eti-unit  { font-size: 12px; color: #9ca3af; margin-top: 2px; }
   </style>
 </head>
 <body>
@@ -350,7 +377,63 @@
       <div class="weather-last-updated" id="w-last-updated">—</div>
     </div>
   </div>
+  <!-- ET Panel -->
+<div class="et-panel">
+  <h2>🌿 Evapotranspiration — Hargreaves-Samani Model</h2>
+  <div class="et-top-row">
+    <div class="et-main">
+      <div class="et-value" id="et-value">—</div>
+      <div class="et-unit">mm/day</div>
+      <div class="et-label">Daily ET₀</div>
+    </div>
+    <div class="et-info">
+      <h3 id="et-title">Calculating water demand...</h3>
+      <p id="et-desc">The Hargreaves-Samani model estimates daily crop water loss using temperature range and extraterrestrial radiation. The irrigation threshold adjusts dynamically based on ET₀, temperature, and light intensity.</p>
+    </div>
+  </div>
 
+  <!-- Three correction layers -->
+  <div class="et-layers">
+    <div class="et-layer">
+      <div class="el-header">
+        <span class="el-name">🌡️ Temperature correction</span>
+        <span class="el-value" id="et-temp-corr">+0.0%</span>
+      </div>
+      <div class="el-desc">FAO Paper No. 56 — crop water demand increases above 25°C base temperature</div>
+      <div class="et-bar-bg"><div class="et-bar-fill" id="et-temp-bar" style="width:0%"></div></div>
+    </div>
+    <div class="et-layer">
+      <div class="el-header">
+        <span class="el-name">☀️ Light correction</span>
+        <span class="el-value" id="et-light-corr">+0.0%</span>
+      </div>
+      <div class="el-desc">FAO Paper No. 33 — transpiration increases with solar radiation above 500 lux</div>
+      <div class="et-bar-bg"><div class="et-bar-fill" id="et-light-bar" style="width:0%"></div></div>
+    </div>
+    <div class="et-layer">
+      <div class="el-header">
+        <span class="el-name">💧 ET₀ correction</span>
+        <span class="el-value" id="et-et-corr">+0.0%</span>
+      </div>
+      <div class="el-desc">Hargreaves-Samani (1985) — daily ET scaled to Chennai reference of 5.0 mm/day</div>
+      <div class="et-bar-bg"><div class="et-bar-fill" id="et-et-bar" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <!-- Start and stop thresholds -->
+  <div class="et-threshold-row">
+    <div class="et-threshold-item">
+      <div class="eti-label">▶ Start irrigation when moisture below</div>
+      <div class="eti-value" id="et-start-threshold">—</div>
+      <div class="eti-unit">% soil moisture</div>
+    </div>
+    <div class="et-threshold-item stop">
+      <div class="eti-label">⏹ Stop irrigation when moisture reaches</div>
+      <div class="eti-value" id="et-stop-threshold">—</div>
+      <div class="eti-unit">% soil moisture</div>
+    </div>
+  </div>
+</div>
   <!-- ML Panel -->
   <div class="ml-panel">
     <h2>🤖 ML Crop Suitability — Random Forest Prediction</h2>
@@ -654,6 +737,46 @@
       document.getElementById('ml-last-updated').textContent = 'Last prediction: '+(data.timestamp||new Date().toLocaleTimeString());
     } catch(e) { console.error('ML error:',e); }
   }
+  // ── ET Panel Update ────────────────────────────────────────
+function updateETPanel(data) {
+  var et        = data.et_mm_day        || 0;
+  var tempCorr  = data.temp_correction  || 0;
+  var lightCorr = data.light_correction || 0;
+  var etCorr    = data.et_correction    || 0;
+  var startT    = data.start_threshold  || 20;
+  var stopT     = data.stop_threshold   || 25;
+
+  document.getElementById('et-value').textContent         = et.toFixed(1);
+  document.getElementById('et-temp-corr').textContent     = '+' + tempCorr.toFixed(1) + '%';
+  document.getElementById('et-light-corr').textContent    = '+' + lightCorr.toFixed(1) + '%';
+  document.getElementById('et-et-corr').textContent       = '+' + etCorr.toFixed(1) + '%';
+  document.getElementById('et-start-threshold').textContent = startT.toFixed(1);
+  document.getElementById('et-stop-threshold').textContent  = stopT.toFixed(1);
+
+  // Progress bars — temp max 3%, light max 2%, ET max 4%
+  document.getElementById('et-temp-bar').style.width  = Math.min(tempCorr  / 3 * 100, 100) + '%';
+  document.getElementById('et-light-bar').style.width = Math.min(lightCorr / 2 * 100, 100) + '%';
+  document.getElementById('et-et-bar').style.width    = Math.min(etCorr    / 4 * 100, 100) + '%';
+
+  // Title
+  var total = tempCorr + lightCorr + etCorr;
+  var title, desc;
+  if (et === 0) {
+    title = 'Building daily temperature range...';
+    desc  = 'ET₀ will be calculated once a daily temperature range is established. Check back in a few hours.';
+  } else if (et < 3) {
+    title = 'Low water demand today';
+    desc  = 'ET₀ of ' + et.toFixed(1) + ' mm/day indicates low evapotranspiration. Irrigation threshold adjusted by +' + total.toFixed(1) + '% above base.';
+  } else if (et < 6) {
+    title = 'Moderate water demand today';
+    desc  = 'ET₀ of ' + et.toFixed(1) + ' mm/day indicates moderate evapotranspiration. Irrigation threshold adjusted by +' + total.toFixed(1) + '% above base.';
+  } else {
+    title = 'High water demand — monitor closely';
+    desc  = 'ET₀ of ' + et.toFixed(1) + ' mm/day indicates high evapotranspiration. Irrigation threshold adjusted by +' + total.toFixed(1) + '% above base. Plants may need more frequent watering.';
+  }
+  document.getElementById('et-title').textContent = title;
+  document.getElementById('et-desc').textContent  = desc;
+}
 
   // ── Fetch Data ─────────────────────────────────────────────
   async function fetchData() {
@@ -682,6 +805,7 @@
       if (labels.length>maxPoints) { labels.shift(); tempData.shift(); moistData.shift(); }
       chart.update();
       renderDSS(runDSS(data));
+      updateETPanel(data);
     } catch(e) { console.error('Fetch error:',e); }
   }
 
