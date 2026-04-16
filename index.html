@@ -12,11 +12,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', sans-serif; background: #f0f4f8; color: #1a202c; }
 
-    header {
-      background: #1a6b3c; color: white;
-      padding: 18px 32px;
-      display: flex; align-items: center; justify-content: space-between;
-    }
+    header { background: #1a6b3c; color: white; padding: 18px 32px; display: flex; align-items: center; justify-content: space-between; }
     header h1 { font-size: 20px; font-weight: 600; }
     header span { font-size: 13px; opacity: 0.8; }
     .container { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
@@ -26,6 +22,49 @@
     .offline-banner.visible { display: flex; }
     .offline-dot { width: 10px; height: 10px; border-radius: 50%; background: #ef4444; flex-shrink: 0; animation: blink 1.2s ease-in-out infinite; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* ── Plant Health Hero ─────────────────────────────────── */
+    .health-hero {
+      background: white;
+      border-radius: 16px;
+      padding: 32px 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      flex-wrap: wrap;
+      transition: background 0.5s ease;
+    }
+    .health-hero.good    { background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 1px solid #bbf7d0; }
+    .health-hero.warning { background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border: 1px solid #fde68a; }
+    .health-hero.danger  { background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); border: 1px solid #fecaca; }
+
+    .plant-visual { flex-shrink: 0; width: 160px; height: 160px; }
+    .plant-visual svg { width: 100%; height: 100%; }
+
+    .hero-content { flex: 1; min-width: 200px; }
+    .hero-content .hero-greeting { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+    .health-hero.good    .hero-greeting { color: #059669; }
+    .health-hero.warning .hero-greeting { color: #d97706; }
+    .health-hero.danger  .hero-greeting { color: #dc2626; }
+
+    .hero-content h2 { font-size: 26px; font-weight: 700; margin-bottom: 8px; color: #1a202c; line-height: 1.2; }
+    .hero-content p  { font-size: 15px; color: #6b7280; line-height: 1.6; margin-bottom: 16px; }
+
+    .hero-score-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .hero-score-pill {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 16px; border-radius: 20px;
+      font-size: 14px; font-weight: 600;
+    }
+    .health-hero.good    .hero-score-pill { background: #d1fae5; color: #065f46; }
+    .health-hero.warning .hero-score-pill { background: #fef3c7; color: #92400e; }
+    .health-hero.danger  .hero-score-pill { background: #fee2e2; color: #991b1b; }
+
+    .hero-quick-stats { display: flex; gap: 12px; flex-wrap: wrap; }
+    .hero-stat { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #6b7280; background: rgba(255,255,255,0.7); padding: 5px 12px; border-radius: 20px; }
+    .hero-stat strong { color: #1a202c; }
 
     /* Status Bar */
     .status-bar { background: white; border-radius: 12px; padding: 14px 20px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
@@ -86,7 +125,18 @@
     .npk-p { background: #f97316; }
     .npk-k { background: #a855f7; }
 
-    /* ── Weather Panel ─────────────────────────────────────── */
+    /* ET Simplified Card */
+    .et-card { background: white; border-radius: 12px; padding: 20px 24px; margin-bottom: 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); border-top: 3px solid #10b981; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    .et-card-left h3 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .et-card-left p  { font-size: 13px; color: #6b7280; }
+    .et-card-stats { display: flex; gap: 16px; flex-wrap: wrap; }
+    .et-stat { display: flex; flex-direction: column; align-items: center; background: #f0fdf4; border-radius: 10px; padding: 12px 20px; min-width: 100px; }
+    .et-stat .es-value { font-size: 22px; font-weight: 700; color: #065f46; }
+    .et-stat .es-label { font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; text-align: center; }
+    .et-stat.orange { background: #fff7ed; }
+    .et-stat.orange .es-value { color: #c2410c; }
+
+    /* Weather Panel */
     .weather-panel { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); margin-bottom: 24px; border-top: 3px solid #0ea5e9; }
     .weather-panel h2 { font-size: 15px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 20px; }
     .weather-top { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #f3f4f6; }
@@ -101,22 +151,18 @@
     .weather-stat .ws-icon  { font-size: 20px; margin-bottom: 4px; }
     .weather-stat .ws-value { font-size: 16px; font-weight: 700; color: #1a202c; }
     .weather-stat .ws-label { font-size: 11px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; }
-
-    /* Weather alert */
     .weather-alert { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; border-radius: 10px; margin-bottom: 20px; }
-    .weather-alert.rain    { background: #eff6ff; border: 1px solid #bfdbfe; }
-    .weather-alert.heat    { background: #fef2f2; border: 1px solid #fecaca; }
-    .weather-alert.good    { background: #f0fdf4; border: 1px solid #bbf7d0; }
+    .weather-alert.rain       { background: #eff6ff; border: 1px solid #bfdbfe; }
+    .weather-alert.heat       { background: #fef2f2; border: 1px solid #fecaca; }
+    .weather-alert.good       { background: #f0fdf4; border: 1px solid #bbf7d0; }
     .weather-alert.light_rain { background: #fffbeb; border: 1px solid #fde68a; }
     .weather-alert-icon { font-size: 22px; flex-shrink: 0; }
     .weather-alert-content .wat-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-    .weather-alert.rain    .wat-title { color: #1e40af; }
-    .weather-alert.heat    .wat-title { color: #991b1b; }
-    .weather-alert.good    .wat-title { color: #065f46; }
+    .weather-alert.rain       .wat-title { color: #1e40af; }
+    .weather-alert.heat       .wat-title { color: #991b1b; }
+    .weather-alert.good       .wat-title { color: #065f46; }
     .weather-alert.light_rain .wat-title { color: #92400e; }
     .weather-alert-content .wat-desc { font-size: 13px; color: #6b7280; line-height: 1.5; }
-
-    /* Forecast strip */
     .forecast-strip { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; }
     .forecast-item { display: flex; flex-direction: column; align-items: center; background: #f9fafb; border-radius: 10px; padding: 12px 14px; min-width: 80px; flex-shrink: 0; }
     .forecast-item .fc-time { font-size: 12px; font-weight: 600; color: #374151; margin-bottom: 6px; }
@@ -191,33 +237,6 @@
     .chart-card h3 { font-size: 14px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px; }
     canvas { max-height: 260px; }
     footer { text-align: center; font-size: 12px; color: #9ca3af; padding: 16px; }
-
-    /* ── ET Panel ─────────────────────────────────────────────── */
-.et-panel { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); margin-bottom: 24px; border-top: 3px solid #10b981; }
-.et-panel h2 { font-size: 15px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 20px; }
-.et-top-row { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #f3f4f6; }
-.et-main { display: flex; flex-direction: column; align-items: center; justify-content: center; background: #ecfdf5; border-radius: 12px; padding: 16px 24px; min-width: 140px; flex-shrink: 0; }
-.et-main .et-value { font-size: 36px; font-weight: 700; color: #065f46; line-height: 1; }
-.et-main .et-unit  { font-size: 13px; color: #059669; margin-top: 4px; }
-.et-main .et-label { font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 6px; }
-.et-info { flex: 1; }
-.et-info h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; color: #1a202c; }
-.et-info p  { font-size: 14px; color: #6b7280; line-height: 1.6; }
-.et-layers { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px; }
-.et-layer { background: #f9fafb; border-radius: 10px; padding: 14px 16px; }
-.et-layer .el-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-.et-layer .el-name   { font-size: 13px; font-weight: 600; color: #374151; }
-.et-layer .el-value  { font-size: 14px; font-weight: 700; color: #10b981; }
-.et-layer .el-desc   { font-size: 12px; color: #9ca3af; line-height: 1.4; }
-.et-bar-bg   { background: #e5e7eb; border-radius: 6px; height: 6px; overflow: hidden; margin-top: 8px; }
-.et-bar-fill { height: 100%; border-radius: 6px; background: #10b981; transition: width 0.6s ease; }
-.et-threshold-row { display: flex; gap: 16px; flex-wrap: wrap; }
-.et-threshold-item { flex: 1; min-width: 140px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 14px 16px; text-align: center; }
-.et-threshold-item.stop { background: #fff7ed; border-color: #fed7aa; }
-.et-threshold-item .eti-label { font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
-.et-threshold-item .eti-value { font-size: 24px; font-weight: 700; color: #065f46; }
-.et-threshold-item.stop .eti-value { color: #c2410c; }
-.et-threshold-item .eti-unit  { font-size: 12px; color: #9ca3af; margin-top: 2px; }
   </style>
 </head>
 <body>
@@ -233,6 +252,63 @@
   <div class="offline-banner" id="offline-banner">
     <div class="offline-dot"></div>
     <span>⚠️ ESP32 is offline — last data received <span id="offline-duration">—</span> ago.</span>
+  </div>
+
+  <!-- ── Plant Health Hero ──────────────────────────────────── -->
+  <div class="health-hero good" id="health-hero">
+    <div class="plant-visual">
+      <svg id="plant-svg" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+        <!-- Sun -->
+        <circle id="sun" cx="130" cy="30" r="18" fill="#fbbf24" opacity="1"/>
+        <line x1="130" y1="6"  x2="130" y2="0"  stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="130" y1="54" x2="130" y2="60" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="106" y1="30" x2="100" y2="30" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="154" y1="30" x2="160" y2="30" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="113" y1="13" x2="109" y2="9"  stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="147" y1="47" x2="151" y2="51" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="147" y1="13" x2="151" y2="9"  stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="113" y1="47" x2="109" y2="51" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- Pot -->
+        <path d="M50 130 L40 155 L120 155 L110 130 Z" fill="#c2855a"/>
+        <rect x="38" y="122" width="84" height="12" rx="4" fill="#a0643a"/>
+        <!-- Soil -->
+        <ellipse cx="80" cy="122" rx="40" ry="8" fill="#7c5c3a"/>
+        <!-- Main stem -->
+        <line id="stem" x1="80" y1="122" x2="80" y2="50" stroke="#22c55e" stroke-width="4" stroke-linecap="round"/>
+        <!-- Left branch -->
+        <line id="branch-l" x1="80" y1="90" x2="45" y2="65" stroke="#22c55e" stroke-width="3" stroke-linecap="round"/>
+        <!-- Right branch -->
+        <line id="branch-r" x1="80" y1="75" x2="115" y2="55" stroke="#22c55e" stroke-width="3" stroke-linecap="round"/>
+        <!-- Left leaf -->
+        <ellipse id="leaf-l" cx="35" cy="58" rx="18" ry="11" fill="#16a34a" transform="rotate(-30 35 58)"/>
+        <!-- Right leaf -->
+        <ellipse id="leaf-r" cx="122" cy="48" rx="18" ry="11" fill="#16a34a" transform="rotate(-30 122 48)"/>
+        <!-- Top leaf -->
+        <ellipse id="leaf-top" cx="80" cy="42" rx="14" ry="9" fill="#16a34a"/>
+        <!-- Water drops (shown when irrigating) -->
+        <g id="water-drops" opacity="0">
+          <ellipse cx="55" cy="140" rx="4" ry="5" fill="#60a5fa" opacity="0.8"/>
+          <ellipse cx="80" cy="145" rx="4" ry="5" fill="#60a5fa" opacity="0.8"/>
+          <ellipse cx="105" cy="140" rx="4" ry="5" fill="#60a5fa" opacity="0.8"/>
+        </g>
+      </svg>
+    </div>
+    <div class="hero-content">
+      <div class="hero-greeting" id="hero-greeting">Garden Status</div>
+      <h2 id="hero-title">Loading garden data...</h2>
+      <p id="hero-desc">Connecting to your rooftop garden sensors.</p>
+      <div class="hero-score-row">
+        <div class="hero-score-pill" id="hero-score-pill">
+          <span id="hero-score-num">—</span>
+          <span>/ 100 health score</span>
+        </div>
+        <div class="hero-quick-stats">
+          <div class="hero-stat">🌡️ <strong id="hs-temp">—</strong>°C</div>
+          <div class="hero-stat">💧 <strong id="hs-moisture">—</strong>%</div>
+          <div class="hero-stat">☀️ <strong id="hs-light">—</strong> lux</div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Status Bar -->
@@ -319,6 +395,24 @@
     </div>
   </div>
 
+  <!-- ET Simplified Card -->
+  <div class="et-card">
+    <div class="et-card-left">
+      <h3>💧 Today's Water Demand</h3>
+      <p id="et-simple-desc">Estimated daily water loss from your plants based on temperature, sunlight and weather conditions.</p>
+    </div>
+    <div class="et-card-stats">
+      <div class="et-stat">
+        <div class="es-value" id="et-simple-value">—</div>
+        <div class="es-label">mm water needed today</div>
+      </div>
+      <div class="et-stat orange">
+        <div class="es-value" id="et-threshold-value">—</div>
+        <div class="es-label">% moisture triggers irrigation</div>
+      </div>
+    </div>
+  </div>
+
   <!-- Weather Panel -->
   <div class="weather-panel">
     <h2>🌤️ Weather — Chennai, India</h2>
@@ -334,35 +428,13 @@
           </div>
         </div>
         <div class="weather-stats">
-          <div class="weather-stat">
-            <div class="ws-icon">💧</div>
-            <div class="ws-value" id="w-humidity">—</div>
-            <div class="ws-label">Humidity</div>
-          </div>
-          <div class="weather-stat">
-            <div class="ws-icon">🌬️</div>
-            <div class="ws-value" id="w-wind">—</div>
-            <div class="ws-label">Wind km/h</div>
-          </div>
-          <div class="weather-stat">
-            <div class="ws-icon">🌡️</div>
-            <div class="ws-value" id="w-feels">—</div>
-            <div class="ws-label">Feels like</div>
-          </div>
-          <div class="weather-stat">
-            <div class="ws-icon">☁️</div>
-            <div class="ws-value" id="w-clouds">—</div>
-            <div class="ws-label">Cloud cover</div>
-          </div>
-          <div class="weather-stat">
-            <div class="ws-icon">🌧️</div>
-            <div class="ws-value" id="w-rain24">—</div>
-            <div class="ws-label">Rain 24h mm</div>
-          </div>
+          <div class="weather-stat"><div class="ws-icon">💧</div><div class="ws-value" id="w-humidity">—</div><div class="ws-label">Humidity</div></div>
+          <div class="weather-stat"><div class="ws-icon">🌬️</div><div class="ws-value" id="w-wind">—</div><div class="ws-label">Wind km/h</div></div>
+          <div class="weather-stat"><div class="ws-icon">🌡️</div><div class="ws-value" id="w-feels">—</div><div class="ws-label">Feels like</div></div>
+          <div class="weather-stat"><div class="ws-icon">☁️</div><div class="ws-value" id="w-clouds">—</div><div class="ws-label">Cloud cover</div></div>
+          <div class="weather-stat"><div class="ws-icon">🌧️</div><div class="ws-value" id="w-rain24">—</div><div class="ws-label">Rain 24h mm</div></div>
         </div>
       </div>
-
-      <!-- Weather Alert -->
       <div class="weather-alert good" id="weather-alert-box">
         <span class="weather-alert-icon" id="w-alert-icon">✅</span>
         <div class="weather-alert-content">
@@ -370,70 +442,12 @@
           <div class="wat-desc" id="w-alert-desc">—</div>
         </div>
       </div>
-
-      <!-- Forecast -->
       <div style="font-size:13px;font-weight:600;color:#374151;margin-bottom:10px;">Next 24 Hours</div>
       <div class="forecast-strip" id="forecast-strip"></div>
       <div class="weather-last-updated" id="w-last-updated">—</div>
     </div>
   </div>
-  <!-- ET Panel -->
-<div class="et-panel">
-  <h2>🌿 Evapotranspiration — Hargreaves-Samani Model</h2>
-  <div class="et-top-row">
-    <div class="et-main">
-      <div class="et-value" id="et-value">—</div>
-      <div class="et-unit">mm/day</div>
-      <div class="et-label">Daily ET₀</div>
-    </div>
-    <div class="et-info">
-      <h3 id="et-title">Calculating water demand...</h3>
-      <p id="et-desc">The Hargreaves-Samani model estimates daily crop water loss using temperature range and extraterrestrial radiation. The irrigation threshold adjusts dynamically based on ET₀, temperature, and light intensity.</p>
-    </div>
-  </div>
 
-  <!-- Three correction layers -->
-  <div class="et-layers">
-    <div class="et-layer">
-      <div class="el-header">
-        <span class="el-name">🌡️ Temperature correction</span>
-        <span class="el-value" id="et-temp-corr">+0.0%</span>
-      </div>
-      <div class="el-desc">FAO Paper No. 56 — crop water demand increases above 25°C base temperature</div>
-      <div class="et-bar-bg"><div class="et-bar-fill" id="et-temp-bar" style="width:0%"></div></div>
-    </div>
-    <div class="et-layer">
-      <div class="el-header">
-        <span class="el-name">☀️ Light correction</span>
-        <span class="el-value" id="et-light-corr">+0.0%</span>
-      </div>
-      <div class="el-desc">FAO Paper No. 33 — transpiration increases with solar radiation above 500 lux</div>
-      <div class="et-bar-bg"><div class="et-bar-fill" id="et-light-bar" style="width:0%"></div></div>
-    </div>
-    <div class="et-layer">
-      <div class="el-header">
-        <span class="el-name">💧 ET₀ correction</span>
-        <span class="el-value" id="et-et-corr">+0.0%</span>
-      </div>
-      <div class="el-desc">Hargreaves-Samani (1985) — daily ET scaled to Chennai reference of 5.0 mm/day</div>
-      <div class="et-bar-bg"><div class="et-bar-fill" id="et-et-bar" style="width:0%"></div></div>
-    </div>
-  </div>
-
-  <!-- Start and stop thresholds -->
-  <div class="et-threshold-row">
-    <div class="et-threshold-item">
-      <div class="eti-label">▶ Start irrigation when moisture below</div>
-      <div class="eti-value" id="et-start-threshold">—</div>
-      <div class="eti-unit">% soil moisture</div>
-    </div>
-    <div class="et-threshold-item stop">
-      <div class="eti-label">⏹ Stop irrigation when moisture reaches</div>
-      <div class="eti-value" id="et-stop-threshold">—</div>
-      <div class="eti-unit">% soil moisture</div>
-    </div>
-  </div>
-</div>
   <!-- ML Panel -->
   <div class="ml-panel">
     <h2>🤖 ML Crop Suitability — Random Forest Prediction</h2>
@@ -496,9 +510,9 @@
 <footer>Rooftop Horticulture DSS &mdash; Data refreshes every 5 seconds</footer>
 
 <script>
-  const FIREBASE_BASE = "https://rooftop-horticulture-default-rtdb.asia-southeast1.firebasedatabase.app";
-  const FIREBASE_URL  = FIREBASE_BASE + "/sensor/latest.json";
-  const CONTROL_URL   = FIREBASE_BASE + "/control/manualIrrigation.json";
+  var FIREBASE_BASE = "https://rooftop-horticulture-default-rtdb.asia-southeast1.firebasedatabase.app";
+  var FIREBASE_URL  = FIREBASE_BASE + "/sensor/latest.json";
+  var CONTROL_URL   = FIREBASE_BASE + "/control/manualIrrigation.json";
 
   // ── Clock ──────────────────────────────────────────────────
   function updateClock() { document.getElementById('clock').textContent = new Date().toLocaleTimeString(); }
@@ -506,7 +520,6 @@
 
   // ── Offline ────────────────────────────────────────────────
   var lastDataTime = null;
-  var OFFLINE_THRESHOLD = 15000;
   function updateOnlineStatus() {
     if (!lastDataTime) return;
     var elapsed = Date.now() - lastDataTime;
@@ -514,7 +527,7 @@
     var textEl   = document.getElementById('system-status-text');
     var bannerEl = document.getElementById('offline-banner');
     var durEl    = document.getElementById('offline-duration');
-    if (elapsed > OFFLINE_THRESHOLD) {
+    if (elapsed > 15000) {
       statusEl.className = 'system-status offline'; textEl.textContent = 'Offline'; bannerEl.classList.add('visible');
       var secs = Math.floor(elapsed/1000), mins = Math.floor(secs/60);
       durEl.textContent = mins > 0 ? mins+' min '+(secs%60)+' sec' : secs+' sec';
@@ -529,7 +542,7 @@
   async function handleManualToggle(isOn) {
     manualState = isOn;
     try { await fetch(CONTROL_URL, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(isOn) }); }
-    catch(e) { console.error('Toggle error:', e); }
+    catch(e) {}
     updateToggleUI(isOn);
   }
   function updateToggleUI(isOn) {
@@ -550,6 +563,75 @@
     } catch(e) {}
   }
 
+  // ── Plant Health Visual ────────────────────────────────────
+  function updatePlantVisual(score, isIrrigating) {
+    var hero     = document.getElementById('health-hero');
+    var greeting = document.getElementById('hero-greeting');
+    var title    = document.getElementById('hero-title');
+    var desc     = document.getElementById('hero-desc');
+    var pill     = document.getElementById('hero-score-pill');
+    var scoreNum = document.getElementById('hero-score-num');
+    var drops    = document.getElementById('water-drops');
+
+    // Leaf and stem colors
+    var leafL   = document.getElementById('leaf-l');
+    var leafR   = document.getElementById('leaf-r');
+    var leafTop = document.getElementById('leaf-top');
+    var stem    = document.getElementById('stem');
+    var branchL = document.getElementById('branch-l');
+    var branchR = document.getElementById('branch-r');
+    var sun     = document.getElementById('sun');
+
+    scoreNum.textContent = score;
+
+    // Show water drops when irrigating
+    drops.setAttribute('opacity', isIrrigating ? '1' : '0');
+
+    if (score >= 75) {
+      // Lush healthy plant
+      hero.className = 'health-hero good';
+      greeting.textContent = '✅ Your garden is thriving';
+      title.textContent    = 'All conditions are optimal!';
+      desc.textContent     = 'Your rooftop garden is in great health. Soil moisture, temperature, nutrients and light are all within ideal ranges. Keep up the good work!';
+      leafL.setAttribute('fill',   '#16a34a');
+      leafR.setAttribute('fill',   '#16a34a');
+      leafTop.setAttribute('fill', '#16a34a');
+      stem.setAttribute('stroke',    '#22c55e');
+      branchL.setAttribute('stroke', '#22c55e');
+      branchR.setAttribute('stroke', '#22c55e');
+      sun.setAttribute('fill', '#fbbf24');
+      sun.setAttribute('opacity', '1');
+    } else if (score >= 50) {
+      // Slightly stressed plant
+      hero.className = 'health-hero warning';
+      greeting.textContent = '⚠️ Your garden needs attention';
+      title.textContent    = 'Some conditions need correction';
+      desc.textContent     = 'Your garden is doing okay but a few things need your attention. Check the recommendations below to keep your crops healthy.';
+      leafL.setAttribute('fill',   '#ca8a04');
+      leafR.setAttribute('fill',   '#ca8a04');
+      leafTop.setAttribute('fill', '#ca8a04');
+      stem.setAttribute('stroke',    '#d97706');
+      branchL.setAttribute('stroke', '#d97706');
+      branchR.setAttribute('stroke', '#d97706');
+      sun.setAttribute('fill', '#f59e0b');
+      sun.setAttribute('opacity', '0.7');
+    } else {
+      // Wilting plant
+      hero.className = 'health-hero danger';
+      greeting.textContent = '🚨 Your garden needs urgent care';
+      title.textContent    = 'Multiple conditions are critical!';
+      desc.textContent     = 'Your garden is struggling. Please check the action steps below immediately to prevent crop loss.';
+      leafL.setAttribute('fill',   '#b45309');
+      leafR.setAttribute('fill',   '#b45309');
+      leafTop.setAttribute('fill', '#b45309');
+      stem.setAttribute('stroke',    '#92400e');
+      branchL.setAttribute('stroke', '#92400e');
+      branchR.setAttribute('stroke', '#92400e');
+      sun.setAttribute('fill', '#9ca3af');
+      sun.setAttribute('opacity', '0.4');
+    }
+  }
+
   // ── Chart ──────────────────────────────────────────────────
   var maxPoints = 20, labels = [], tempData = [], moistData = [];
   var ctx = document.getElementById('liveChart').getContext('2d');
@@ -562,22 +644,20 @@
     options: { responsive:true, animation:{duration:300}, scales:{ x:{ticks:{font:{size:11}}}, y:{beginAtZero:false,ticks:{font:{size:11}}} }, plugins:{legend:{position:'top'}} }
   });
 
-  // ── Weather Icons Map ──────────────────────────────────────
+  // ── Weather Icons ──────────────────────────────────────────
   function getWeatherEmoji(icon) {
-    var map = { '01d':'☀️','01n':'🌙','02d':'⛅','02n':'⛅','03d':'☁️','03n':'☁️','04d':'☁️','04n':'☁️','09d':'🌧️','09n':'🌧️','10d':'🌦️','10n':'🌦️','11d':'⛈️','11n':'⛈️','13d':'❄️','13n':'❄️','50d':'🌫️','50n':'🌫️' };
+    var map = {'01d':'☀️','01n':'🌙','02d':'⛅','02n':'⛅','03d':'☁️','03n':'☁️','04d':'☁️','04n':'☁️','09d':'🌧️','09n':'🌧️','10d':'🌦️','10n':'🌦️','11d':'⛈️','11n':'⛈️','13d':'❄️','13n':'❄️','50d':'🌫️','50n':'🌫️'};
     return map[icon] || '🌤️';
   }
 
-  // ── Weather Render ─────────────────────────────────────────
+  // ── Weather ────────────────────────────────────────────────
   async function fetchWeather() {
     try {
       var res  = await fetch(FIREBASE_BASE+'/weather.json?nocache='+Date.now());
       var data = await res.json();
       if (!data || !data.current) return;
-
       document.getElementById('weather-loading').style.display = 'none';
       document.getElementById('weather-content').style.display = 'block';
-
       var c = data.current;
       document.getElementById('w-icon').textContent     = getWeatherEmoji(c.icon);
       document.getElementById('w-temp').textContent     = c.temperature;
@@ -587,35 +667,19 @@
       document.getElementById('w-feels').textContent    = c.feels_like+'°C';
       document.getElementById('w-clouds').textContent   = c.clouds+'%';
       document.getElementById('w-rain24').textContent   = data.rain_amount_24h;
-
-      // Alert box
-      var alertBox   = document.getElementById('weather-alert-box');
-      var alertIcon  = document.getElementById('w-alert-icon');
-      var alertTitle = document.getElementById('w-alert-title');
-      var alertDesc  = document.getElementById('w-alert-desc');
-      var alertType  = data.weather_alert || 'good';
+      var alertType = data.weather_alert || 'good';
+      var alertBox  = document.getElementById('weather-alert-box');
       alertBox.className = 'weather-alert '+alertType;
-
-      var alertConfigs = {
-        rain:       { icon:'🌧️', title:'Rain Expected — Skip Irrigation' },
-        light_rain: { icon:'🌦️', title:'Light Rain Possible' },
-        heat:       { icon:'🔥', title:'Heat Alert' },
-        good:       { icon:'✅', title:'Weather Conditions Favourable' }
-      };
-      var cfg = alertConfigs[alertType] || alertConfigs['good'];
-      alertIcon.textContent  = cfg.icon;
-      alertTitle.textContent = cfg.title;
-      alertDesc.textContent  = (data.weather_advice || []).join(' ');
-
-      // Forecast strip
-      var strip = document.getElementById('forecast-strip');
-      strip.innerHTML = (data.forecast || []).map(function(f) {
+      var configs = { rain:{icon:'🌧️',title:'Rain Expected — Skip Irrigation'}, light_rain:{icon:'🌦️',title:'Light Rain Possible'}, heat:{icon:'🔥',title:'Heat Alert'}, good:{icon:'✅',title:'Weather Conditions Favourable'} };
+      var cfg = configs[alertType] || configs['good'];
+      document.getElementById('w-alert-icon').textContent  = cfg.icon;
+      document.getElementById('w-alert-title').textContent = cfg.title;
+      document.getElementById('w-alert-desc').textContent  = (data.weather_advice||[]).join(' ');
+      document.getElementById('forecast-strip').innerHTML = (data.forecast||[]).map(function(f){
         return '<div class="forecast-item"><div class="fc-time">'+f.time+'</div><div class="fc-icon">'+getWeatherEmoji(f.icon)+'</div><div class="fc-temp">'+f.temp+'°C</div>'+(f.rain>0?'<div class="fc-rain">'+f.rain+'mm</div>':'')+'</div>';
       }).join('');
-
       document.getElementById('w-last-updated').textContent = 'Updated: '+(data.last_updated||'—');
-
-    } catch(e) { console.error('Weather error:', e); }
+    } catch(e) { console.error('Weather error:',e); }
   }
 
   // ── Crop Thresholds ────────────────────────────────────────
@@ -637,21 +701,20 @@
 
     if (m < T.moisture.low) {
       var sev = m < T.moisture.low/2 ? 'danger':'warning'; score -= sev==='danger'?25:15;
-      alerts.push({type:sev, icon:'💧', title:'Low Soil Moisture', desc:'Moisture is '+m.toFixed(1)+'% — below '+T.name+' minimum of '+T.moisture.low+'%. '+(irr?'Irrigation is ON.':'Irrigation should activate soon.')});
+      alerts.push({type:sev,icon:'💧',title:'Low Soil Moisture',desc:'Moisture is '+m.toFixed(1)+'% — below '+T.name+' minimum of '+T.moisture.low+'%. '+(irr?'Irrigation is ON.':'Irrigation should activate soon.')});
       actions.push(irr?'Monitor irrigation — system is watering to restore moisture.':'Check solenoid valve — irrigation should have triggered automatically.');
     } else if (m > T.moisture.high) {
-      score-=15; alerts.push({type:'warning',icon:'🌊',title:'High Soil Moisture',desc:'Moisture '+m.toFixed(1)+'% above '+T.name+' maximum of '+T.moisture.high+'%. Risk of root rot.'});
+      score-=15; alerts.push({type:'warning',icon:'🌊',title:'High Soil Moisture',desc:'Moisture '+m.toFixed(1)+'% above '+T.name+' maximum of '+T.moisture.high+'%.'});
       actions.push('Pause irrigation and improve drainage.');
-    } else { alerts.push({type:'good',icon:'✅',title:'Moisture Optimal',desc:'Soil moisture '+m.toFixed(1)+'% ideal for '+T.name+' ('+T.moisture.low+'–'+T.moisture.high+'%).'}); }
+    } else { alerts.push({type:'good',icon:'✅',title:'Moisture Optimal',desc:'Soil moisture '+m.toFixed(1)+'% ideal for '+T.name+'.'}); }
 
     if (t > T.temperature.high) {
       score-=20; alerts.push({type:'danger',icon:'🔥',title:'High Temperature',desc:'Temperature '+t.toFixed(1)+'°C exceeds '+T.name+' maximum of '+T.temperature.high+'°C.'});
       actions.push('Install shade netting to protect '+T.name+' from heat stress.');
-      actions.push('Increase irrigation slightly to compensate for higher evapotranspiration.');
     } else if (t < T.temperature.low) {
       score-=15; alerts.push({type:'warning',icon:'🧊',title:'Low Temperature',desc:'Temperature '+t.toFixed(1)+'°C below '+T.name+' minimum of '+T.temperature.low+'°C.'});
       actions.push('Protect '+T.name+' with row covers or move grow bag to warmer location.');
-    } else { alerts.push({type:'good',icon:'✅',title:'Temperature Optimal',desc:'Temperature '+t.toFixed(1)+'°C ideal for '+T.name+' ('+T.temperature.low+'–'+T.temperature.high+'°C).'}); }
+    } else { alerts.push({type:'good',icon:'✅',title:'Temperature Optimal',desc:'Temperature '+t.toFixed(1)+'°C ideal for '+T.name+'.'}); }
 
     if (l < T.light.low) {
       score-=15; alerts.push({type:'warning',icon:'🌑',title:'Insufficient Light',desc:'Light '+l.toFixed(0)+' lux below '+T.name+' minimum of '+T.light.low+' lux.'});
@@ -659,23 +722,23 @@
     } else { alerts.push({type:'good',icon:'☀️',title:'Light Adequate',desc:'Light '+l.toFixed(0)+' lux sufficient for '+T.name+'.'}); }
 
     if (ec > T.ec.high) {
-      score-=15; alerts.push({type:'danger',icon:'⚡',title:'High EC',desc:'EC '+ec+' µS/cm exceeds '+T.name+' maximum of '+T.ec.high+' µS/cm.'});
+      score-=15; alerts.push({type:'danger',icon:'⚡',title:'High EC',desc:'EC '+ec+' µS/cm exceeds '+T.name+' maximum.'});
       actions.push('Flush soil with clean water and reduce fertilizer dosage.');
     } else if (ec>0 && ec<T.ec.low) {
-      score-=10; alerts.push({type:'info',icon:'📉',title:'Low EC',desc:'EC '+ec+' µS/cm below '+T.name+' minimum of '+T.ec.low+' µS/cm.'});
-      actions.push('Apply balanced liquid fertilizer to restore nutrient levels.');
+      score-=10; alerts.push({type:'info',icon:'📉',title:'Low EC',desc:'EC '+ec+' µS/cm below '+T.name+' minimum.'});
+      actions.push('Apply balanced liquid fertilizer.');
     }
 
     if (s > T.salinity.high) {
-      score-=10; alerts.push({type:'warning',icon:'🧂',title:'High Salinity',desc:'Salinity '+s+' mg/L exceeds safe limit of '+T.salinity.high+' mg/L for '+T.name+'.'});
-      actions.push('Leach soil with excess clean water to flush soluble salts.');
+      score-=10; alerts.push({type:'warning',icon:'🧂',title:'High Salinity',desc:'Salinity '+s+' mg/L exceeds safe limit for '+T.name+'.'});
+      actions.push('Leach soil with excess clean water.');
     }
 
     var npkIssues=[];
-    if (n>0&&n<T.nitrogen.low)    { npkIssues.push('Nitrogen ('+n+' mg/kg) low for '+T.name+' — apply urea or ammonium sulphate'); score-=8; }
-    if (n>T.nitrogen.high)        { npkIssues.push('Nitrogen ('+n+' mg/kg) excessive — reduce nitrogen fertilizer'); score-=5; }
-    if (p>0&&p<T.phosphorus.low)  { npkIssues.push('Phosphorus ('+p+' mg/kg) low for '+T.name+' — apply superphosphate'); score-=8; }
-    if (k>0&&k<T.potassium.low)   { npkIssues.push('Potassium ('+k+' mg/kg) low for '+T.name+' — apply potassium sulphate'); score-=8; }
+    if (n>0&&n<T.nitrogen.low)   { npkIssues.push('Nitrogen ('+n+' mg/kg) low — apply urea or ammonium sulphate'); score-=8; }
+    if (n>T.nitrogen.high)       { npkIssues.push('Nitrogen ('+n+' mg/kg) excessive — reduce nitrogen fertilizer'); score-=5; }
+    if (p>0&&p<T.phosphorus.low) { npkIssues.push('Phosphorus ('+p+' mg/kg) low — apply superphosphate'); score-=8; }
+    if (k>0&&k<T.potassium.low)  { npkIssues.push('Potassium ('+k+' mg/kg) low — apply potassium sulphate'); score-=8; }
     if (npkIssues.length>0) {
       alerts.push({type:'warning',icon:'🌱',title:'Nutrient Imbalance',desc:npkIssues.join('. ')+'.'});
       actions.push('Apply targeted NPK fertilizer based on deficiencies listed above.');
@@ -684,14 +747,14 @@
     if (manualState) {
       alerts.push({type:'info',icon:'🎛️',title:'Manual Override Active',desc:'Irrigation is being controlled manually from the dashboard.'});
     } else {
-      alerts.push({type:irr?'info':'good', icon:irr?'🚿':'⏸', title:irr?'Irrigation Active':'Irrigation Standby', desc:irr?'Solenoid valve is open — water is flowing.':'Moisture levels do not require irrigation currently.'});
+      alerts.push({type:irr?'info':'good',icon:irr?'🚿':'⏸',title:irr?'Irrigation Active':'Irrigation Standby',desc:irr?'Solenoid valve is open — water is flowing.':'Moisture levels do not require irrigation currently.'});
     }
 
     score = Math.max(0,Math.min(100,score));
     var title,desc,scoreClass;
-    if (score>=75)      { title=T.name+' Conditions Good';        desc='Growing conditions well suited for '+T.name+'. Continue current practices.';                              scoreClass='score-good'; }
-    else if (score>=50) { title=T.name+' Needs Attention';        desc='Some parameters outside optimal range for '+T.name+'. Follow action steps below.';                       scoreClass='score-warning'; }
-    else                { title='Critical — '+T.name+' at Risk';  desc='Multiple parameters outside safe range for '+T.name+'. Immediate action needed to prevent crop loss.';   scoreClass='score-danger'; }
+    if (score>=75)      { title=T.name+' Conditions Good';       desc='Growing conditions well suited for '+T.name+'.';                                                scoreClass='score-good'; }
+    else if (score>=50) { title=T.name+' Needs Attention';       desc='Some parameters outside optimal range for '+T.name+'. Follow action steps below.';             scoreClass='score-warning'; }
+    else                { title='Critical — '+T.name+' at Risk'; desc='Multiple parameters outside safe range for '+T.name+'. Immediate action needed.';              scoreClass='score-danger'; }
     return {score,title,desc,scoreClass,alerts,actions};
   }
 
@@ -701,13 +764,16 @@
     document.getElementById('health-score').textContent = result.score;
     document.getElementById('health-title').textContent = result.title;
     document.getElementById('health-desc').textContent  = result.desc;
-    document.getElementById('alerts-grid').innerHTML = result.alerts.map(function(a) {
+    document.getElementById('alerts-grid').innerHTML = result.alerts.map(function(a){
       return '<div class="alert-item '+a.type+'"><span class="alert-icon">'+a.icon+'</span><div class="alert-content"><div class="alert-title">'+a.title+'</div><div class="alert-desc">'+a.desc+'</div></div></div>';
     }).join('');
     var list = document.getElementById('action-list');
     list.innerHTML = result.actions.length===0
       ? '<div class="action-step"><span class="step-num">✓</span><span class="step-text">No immediate actions required — maintain current practices.</span></div>'
       : result.actions.map(function(a,i){ return '<div class="action-step"><span class="step-num">'+(i+1)+'</span><span class="step-text">'+a+'</span></div>'; }).join('');
+
+    // Update plant visual with same score
+    updatePlantVisual(result.score, lastSensorData ? lastSensorData.irrigation : false);
   }
 
   // ── ML ─────────────────────────────────────────────────────
@@ -723,89 +789,77 @@
       document.getElementById('ml-crop-icon').textContent = CROP_ICONS[crop]||'🌱';
       document.getElementById('ml-crop-name').textContent = CROP_DISPLAY[crop]||crop;
       document.getElementById('ml-crop-conf').textContent = confidence+'% match';
-      var badge = document.getElementById('ml-conf-badge');
-      badge.textContent = confLabel+' Confidence';
-      badge.className   = 'confidence-badge conf-'+confLabel.toLowerCase();
-      document.getElementById('ml-title').textContent = 'Best match: '+(CROP_DISPLAY[crop]||crop)+' ('+confidence+'% confidence)';
-      document.getElementById('ml-desc').textContent  = 'Based on current sensor readings, soil conditions are most suitable for '+(CROP_DISPLAY[crop]||crop)+'. See suitability scores below.';
-      var maxScore = Math.max.apply(null,Object.values(suitability));
-      document.getElementById('suitability-grid').innerHTML = Object.entries(suitability).sort(function(a,b){return b[1]-a[1];}).map(function(entry){
-        var c=entry[0],sc=entry[1];
+      var badge=document.getElementById('ml-conf-badge');
+      badge.textContent=confLabel+' Confidence';
+      badge.className='confidence-badge conf-'+confLabel.toLowerCase();
+      document.getElementById('ml-title').textContent='Best match: '+(CROP_DISPLAY[crop]||crop)+' ('+confidence+'% confidence)';
+      document.getElementById('ml-desc').textContent='Based on current sensor readings, soil conditions are most suitable for '+(CROP_DISPLAY[crop]||crop)+'. See suitability scores below.';
+      var maxScore=Math.max.apply(null,Object.values(suitability));
+      document.getElementById('suitability-grid').innerHTML=Object.entries(suitability).sort(function(a,b){return b[1]-a[1];}).map(function(e){
+        var c=e[0],sc=e[1];
         return '<div class="suit-item"><div class="suit-header"><span class="suit-name">'+(CROP_ICONS[c]||'🌱')+' '+(CROP_DISPLAY[c]||c)+'</span><span class="suit-score">'+sc+'%</span></div><div class="suit-bar-bg"><div class="suit-bar-fill '+(sc===maxScore?'best':'')+'" style="width:'+sc+'%"></div></div></div>';
       }).join('');
-      document.getElementById('ml-advice-list').innerHTML = advice.map(function(a){ return '<div class="ml-advice-item"><span>💡</span><span>'+a+'</span></div>'; }).join('');
-      document.getElementById('ml-last-updated').textContent = 'Last prediction: '+(data.timestamp||new Date().toLocaleTimeString());
+      document.getElementById('ml-advice-list').innerHTML=advice.map(function(a){return '<div class="ml-advice-item"><span>💡</span><span>'+a+'</span></div>';}).join('');
+      document.getElementById('ml-last-updated').textContent='Last prediction: '+(data.timestamp||new Date().toLocaleTimeString());
     } catch(e) { console.error('ML error:',e); }
   }
-  // ── ET Panel Update ────────────────────────────────────────
-function updateETPanel(data) {
-  var et        = data.et_mm_day        || 0;
-  var tempCorr  = data.temp_correction  || 0;
-  var lightCorr = data.light_correction || 0;
-  var etCorr    = data.et_correction    || 0;
-  var startT    = data.start_threshold  || 20;
-  var stopT     = data.stop_threshold   || 25;
-
-  document.getElementById('et-value').textContent         = et.toFixed(1);
-  document.getElementById('et-temp-corr').textContent     = '+' + tempCorr.toFixed(1) + '%';
-  document.getElementById('et-light-corr').textContent    = '+' + lightCorr.toFixed(1) + '%';
-  document.getElementById('et-et-corr').textContent       = '+' + etCorr.toFixed(1) + '%';
-  document.getElementById('et-start-threshold').textContent = startT.toFixed(1);
-  document.getElementById('et-stop-threshold').textContent  = stopT.toFixed(1);
-
-  // Progress bars — temp max 3%, light max 2%, ET max 4%
-  document.getElementById('et-temp-bar').style.width  = Math.min(tempCorr  / 3 * 100, 100) + '%';
-  document.getElementById('et-light-bar').style.width = Math.min(lightCorr / 2 * 100, 100) + '%';
-  document.getElementById('et-et-bar').style.width    = Math.min(etCorr    / 4 * 100, 100) + '%';
-
-  // Title
-  var total = tempCorr + lightCorr + etCorr;
-  var title, desc;
-  if (et === 0) {
-    title = 'Building daily temperature range...';
-    desc  = 'ET₀ will be calculated once a daily temperature range is established. Check back in a few hours.';
-  } else if (et < 3) {
-    title = 'Low water demand today';
-    desc  = 'ET₀ of ' + et.toFixed(1) + ' mm/day indicates low evapotranspiration. Irrigation threshold adjusted by +' + total.toFixed(1) + '% above base.';
-  } else if (et < 6) {
-    title = 'Moderate water demand today';
-    desc  = 'ET₀ of ' + et.toFixed(1) + ' mm/day indicates moderate evapotranspiration. Irrigation threshold adjusted by +' + total.toFixed(1) + '% above base.';
-  } else {
-    title = 'High water demand — monitor closely';
-    desc  = 'ET₀ of ' + et.toFixed(1) + ' mm/day indicates high evapotranspiration. Irrigation threshold adjusted by +' + total.toFixed(1) + '% above base. Plants may need more frequent watering.';
-  }
-  document.getElementById('et-title').textContent = title;
-  document.getElementById('et-desc').textContent  = desc;
-}
 
   // ── Fetch Data ─────────────────────────────────────────────
   async function fetchData() {
     try {
       var res  = await fetch(FIREBASE_URL+'?nocache='+Date.now());
       var data = await res.json();
-      lastDataTime = Date.now(); lastSensorData = data; updateOnlineStatus();
-      document.getElementById('val-temp').textContent     = data.temperature!=null ? data.temperature.toFixed(1) : '—';
-      document.getElementById('val-moisture').textContent = data.moisture!=null    ? data.moisture.toFixed(1)    : '—';
-      document.getElementById('val-light').textContent    = data.light!=null       ? data.light.toFixed(0)       : '—';
-      document.getElementById('val-ec').textContent       = data.ec!=null          ? data.ec                     : '—';
-      document.getElementById('val-salinity').textContent = data.salinity!=null    ? data.salinity               : '—';
-      var nVal=data.nitrogen||0, pVal=data.phosphorus||0, kVal=data.potassium||0;
-      document.getElementById('val-n').textContent = nVal+' mg/kg';
-      document.getElementById('val-p').textContent = pVal+' mg/kg';
-      document.getElementById('val-k').textContent = kVal+' mg/kg';
-      document.getElementById('bar-n').style.width = Math.min(nVal/300*100,100)+'%';
-      document.getElementById('bar-p').style.width = Math.min(pVal/300*100,100)+'%';
-      document.getElementById('bar-k').style.width = Math.min(kVal/300*100,100)+'%';
-      var badge = document.getElementById('irrigation-badge');
-      badge.textContent = data.irrigation ? '💧 ON — Irrigating' : '⏸ OFF';
-      badge.className   = 'irrigation-badge '+(data.irrigation?'on':'off');
-      document.getElementById('last-updated').textContent = 'Last updated: '+new Date().toLocaleTimeString();
+      lastDataTime=Date.now(); lastSensorData=data; updateOnlineStatus();
+
+      document.getElementById('val-temp').textContent     = data.temperature!=null?data.temperature.toFixed(1):'—';
+      document.getElementById('val-moisture').textContent = data.moisture!=null?data.moisture.toFixed(1):'—';
+      document.getElementById('val-light').textContent    = data.light!=null?data.light.toFixed(0):'—';
+      document.getElementById('val-ec').textContent       = data.ec!=null?data.ec:'—';
+      document.getElementById('val-salinity').textContent = data.salinity!=null?data.salinity:'—';
+
+      // Hero quick stats
+      document.getElementById('hs-temp').textContent    = data.temperature!=null?data.temperature.toFixed(1):'—';
+      document.getElementById('hs-moisture').textContent= data.moisture!=null?data.moisture.toFixed(1):'—';
+      document.getElementById('hs-light').textContent   = data.light!=null?data.light.toFixed(0):'—';
+
+      var nVal=data.nitrogen||0,pVal=data.phosphorus||0,kVal=data.potassium||0;
+      document.getElementById('val-n').textContent=nVal+' mg/kg';
+      document.getElementById('val-p').textContent=pVal+' mg/kg';
+      document.getElementById('val-k').textContent=kVal+' mg/kg';
+      document.getElementById('bar-n').style.width=Math.min(nVal/300*100,100)+'%';
+      document.getElementById('bar-p').style.width=Math.min(pVal/300*100,100)+'%';
+      document.getElementById('bar-k').style.width=Math.min(kVal/300*100,100)+'%';
+
+      var badge=document.getElementById('irrigation-badge');
+      badge.textContent=data.irrigation?'💧 ON — Irrigating':'⏸ OFF';
+      badge.className='irrigation-badge '+(data.irrigation?'on':'off');
+      document.getElementById('last-updated').textContent='Last updated: '+new Date().toLocaleTimeString();
+
+      // ET simplified card
+      var et = data.et_mm_day || 0;
+      var startT = data.start_threshold || 20;
+      document.getElementById('et-simple-value').textContent   = et.toFixed(1);
+      document.getElementById('et-threshold-value').textContent = startT.toFixed(1);
+      if (et === 0) {
+        document.getElementById('et-simple-desc').textContent = 'Building daily temperature range — ET will be calculated after a few hours of operation.';
+      } else if (et < 3) {
+        document.getElementById('et-simple-desc').textContent = 'Low water demand today — cool or cloudy conditions mean your plants need less water than usual.';
+      } else if (et < 6) {
+        document.getElementById('et-simple-desc').textContent = 'Moderate water demand today — typical Chennai conditions. Automated irrigation will manage your plants.';
+      } else {
+        document.getElementById('et-simple-desc').textContent = 'High water demand today — hot and sunny conditions mean your plants are losing water quickly. Monitor soil moisture closely.';
+      }
+
+      // Chart
       labels.push(data.timestamp?data.timestamp.split(' ')[1]:new Date().toLocaleTimeString());
       tempData.push(data.temperature); moistData.push(data.moisture);
-      if (labels.length>maxPoints) { labels.shift(); tempData.shift(); moistData.shift(); }
+      if (labels.length>maxPoints){labels.shift();tempData.shift();moistData.shift();}
       chart.update();
-      renderDSS(runDSS(data));
-      updateETPanel(data);
+
+      // DSS + plant visual
+      var result = runDSS(data);
+      renderDSS(result);
+
     } catch(e) { console.error('Fetch error:',e); }
   }
 
@@ -815,10 +869,10 @@ function updateETPanel(data) {
       var res  = await fetch(FIREBASE_BASE+'/sensor/history.json?orderBy=%22timestamp%22&limitToLast=20&nocache='+Date.now());
       var data = await res.json();
       if (!data) return;
-      var entries = Object.values(data).sort(function(a,b){ return a.timestamp.localeCompare(b.timestamp); });
-      chart.data.labels           = entries.map(function(e){ return e.timestamp?e.timestamp.split(' ')[1]:''; });
-      chart.data.datasets[0].data = entries.map(function(e){ return e.temperature!=null?parseFloat(e.temperature):null; });
-      chart.data.datasets[1].data = entries.map(function(e){ return e.moisture!=null?parseFloat(e.moisture):null; });
+      var entries=Object.values(data).sort(function(a,b){return a.timestamp.localeCompare(b.timestamp);});
+      chart.data.labels=entries.map(function(e){return e.timestamp?e.timestamp.split(' ')[1]:'';});
+      chart.data.datasets[0].data=entries.map(function(e){return e.temperature!=null?parseFloat(e.temperature):null;});
+      chart.data.datasets[1].data=entries.map(function(e){return e.moisture!=null?parseFloat(e.moisture):null;});
       chart.update();
     } catch(e) { console.error('History error:',e); }
   }
@@ -832,7 +886,7 @@ function updateETPanel(data) {
   setInterval(fetchData, 5000);
   setInterval(fetchHistory, 30000);
   setInterval(fetchMLPrediction, 30000);
-  setInterval(fetchWeather, 600000);  // weather refreshes every 10 min
+  setInterval(fetchWeather, 600000);
 </script>
 
 </body>
