@@ -519,9 +519,8 @@
   setInterval(updateClock, 1000); updateClock();
 
   // ── Offline ────────────────────────────────────────────────
-  var lastDataTime = null;
+  var lastDataTime = Date.now();
   function updateOnlineStatus() {
-    if (!lastDataTime) return;
     var elapsed = Date.now() - lastDataTime;
     var statusEl = document.getElementById('system-status');
     var textEl   = document.getElementById('system-status-text');
