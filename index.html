@@ -520,20 +520,26 @@
 
   // ── Offline ────────────────────────────────────────────────
   var lastDataTime = Date.now();
+  var lastTimestamp = null;
+  var lastTimestampTime = Date.now();
   function updateOnlineStatus() {
-    var elapsed = Date.now() - lastDataTime;
-    var statusEl = document.getElementById('system-status');
-    var textEl   = document.getElementById('system-status-text');
-    var bannerEl = document.getElementById('offline-banner');
-    var durEl    = document.getElementById('offline-duration');
-    if (elapsed > 15000) {
-      statusEl.className = 'system-status offline'; textEl.textContent = 'Offline'; bannerEl.classList.add('visible');
-      var secs = Math.floor(elapsed/1000), mins = Math.floor(secs/60);
-      durEl.textContent = mins > 0 ? mins+' min '+(secs%60)+' sec' : secs+' sec';
-    } else {
-      statusEl.className = 'system-status online'; textEl.textContent = 'Online'; bannerEl.classList.remove('visible');
-    }
+  var elapsed = Date.now() - lastTimestampTime;
+  var statusEl = document.getElementById('system-status');
+  var textEl   = document.getElementById('system-status-text');
+  var bannerEl = document.getElementById('offline-banner');
+  var durEl    = document.getElementById('offline-duration');
+  if (elapsed > 30000) {
+    statusEl.className = 'system-status offline';
+    textEl.textContent = 'Offline';
+    bannerEl.classList.add('visible');
+    var secs = Math.floor(elapsed/1000), mins = Math.floor(secs/60);
+    durEl.textContent = mins > 0 ? mins+' min '+(secs%60)+' sec' : secs+' sec';
+  } else {
+    statusEl.className = 'system-status online';
+    textEl.textContent = 'Online';
+    bannerEl.classList.remove('visible');
   }
+}
   setInterval(updateOnlineStatus, 3000);
 
   // ── Manual Toggle ──────────────────────────────────────────
@@ -808,7 +814,16 @@
     try {
       var res  = await fetch(FIREBASE_URL+'?nocache='+Date.now());
       var data = await res.json();
-      lastDataTime=Date.now(); lastSensorData=data; updateOnlineStatus();
+      lastDataTime = Date.now();
+lastSensorData = data;
+
+// Check if timestamp changed — if not, ESP32 is offline
+var newTimestamp = data.timestamp || null;
+if (newTimestamp && newTimestamp !== lastTimestamp) {
+  lastTimestamp = newTimestamp;
+  lastTimestampTime = Date.now();
+}
+updateOnlineStatus();
 
       document.getElementById('val-temp').textContent     = data.temperature!=null?data.temperature.toFixed(1):'—';
       document.getElementById('val-moisture').textContent = data.moisture!=null?data.moisture.toFixed(1):'—';
