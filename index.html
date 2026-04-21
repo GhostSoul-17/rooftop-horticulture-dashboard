@@ -865,10 +865,14 @@ updateOnlineStatus();
       }
 
       // Chart
-      labels.push(data.timestamp?data.timestamp.split(' ')[1]:new Date().toLocaleTimeString());
-      tempData.push(data.temperature); moistData.push(data.moisture);
-      if (labels.length>maxPoints){labels.shift();tempData.shift();moistData.shift();}
+      var newLabel = data.timestamp ? data.timestamp.split(' ')[1] : new Date().toLocaleTimeString();
+      if (labels.length === 0 || labels[labels.length-1] !== newLabel) {
+      labels.push(newLabel);
+      tempData.push(data.temperature);
+      moistData.push(data.moisture);
+      if (labels.length > maxPoints) { labels.shift(); tempData.shift(); moistData.shift(); }
       chart.update();
+      }
 
       // DSS + plant visual
       var result = runDSS(data);
